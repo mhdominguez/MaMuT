@@ -106,12 +106,14 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 	private final int tFrom;
 
 	private final int tTo;
+	
+	private final boolean doBreakDiv;	
 
 	/*
 	 * CONSTRUCTORS
 	 */
 
-	public TGMMImporter2( final File file, final List< AffineTransform3D > transforms, final Pattern framePattern, final Logger logger, final RealInterval interval, final int tFrom, final int tTo )
+	public TGMMImporter2( final File file, final List< AffineTransform3D > transforms, final Pattern framePattern, final Logger logger, final RealInterval interval, final int tFrom, final int tTo, final boolean doBreakDiv )
 	{
 		this.file = file;
 		this.framePattern = framePattern;
@@ -120,6 +122,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 		this.interval = interval;
 		this.tFrom = tFrom;
 		this.tTo = tTo;
+		this.doBreakDiv = doBreakDiv;
 	}
 
 	/*
@@ -425,7 +428,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 						continue;
 					}
 				}
-
+				
 				/*
 				 * Finished inspecting a frame. Store it in the spot collection.
 				 */
@@ -435,6 +438,46 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 				logger.log( "Found " + spots.size() + " spots.\n" );
 				logger.setProgress( ( double ) t / frames.length );
 			}
+			/*
+			 * Break divisions, leaving only closest daughter attached
+			 */
+			 if ( doBreakDiv )
+			 {
+			 	final Map< Spot, Spot > edge_remove_list;
+				for ( final DefaultWeightedEdge edge_1 : graph.edgeSet() )
+				{
+					//check for edge_1 source already in remove list
+					final Spot edge_1_added_target = edge_remove_list.get( graph.getEdgeSource( edge_1 ) )
+					if ( edge_1_added_target != null )
+						continue;
+						
+					for ( final DefaultWeightedEdge edge_2 : graph.edgeSet() )
+					{
+						if ( edge_2 == edge_1 )
+							continue;					
+						
+						//check for edge_2 source already in remove list
+						final Spot edge_2_added_target = edge_remove_list.get( graph.getEdgeSource( edge_2 ) )
+						if ( edge_2_added_target != null )
+							continue;
+							
+						if ( graph.getEdgeSource( edge_2 ) == graph.getEdgeSource( edge_1 ) ) //found two daughters of same parent
+						{
+							//find farthest daughter
+							final double d1 = graph.getEdgeSource( edge_1 ).squareDistanceTo( graph.getEdgeTarget( edge_1 ) );
+							final double d2 = graph.getEdgeSource( edge_2 ).squareDistanceTo( graph.getEdgeTarget( edge_2 ) );
+							
+							if ( d1>d2 ) //mark edge_1 for removal
+								edge_remove_list.put(graph.getEdgeSource( edge_1 ),graph.getEdgeTarget( edge_1 ));
+							else  //mark edge_2 for removal
+								edge_remove_list.put(graph.getEdgeSource( edge_2 ),graph.getEdgeTarget( edge_2 ));
+						}
+					}
+				}
+				
+				//remove edges
+				edge_remove_list.forEach((a,b)->graph.removeEdge(a,b);
+			}			
 		}
 		catch ( final JDOMException e )
 		{

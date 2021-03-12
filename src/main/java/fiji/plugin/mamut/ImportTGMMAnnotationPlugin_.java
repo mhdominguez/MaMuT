@@ -123,7 +123,8 @@ public class ImportTGMMAnnotationPlugin_ implements PlugIn
 	private static double defaultXFrom = 0;
 
 	private static boolean defaultDoCrop = false;
-
+	private static boolean defaultBreakDiv = false;
+	
 	private static String defaultOutputPath;
 
 	private static String defaultTGMMPath;
@@ -174,9 +175,10 @@ public class ImportTGMMAnnotationPlugin_ implements PlugIn
 		/*
 		 * Interval controls
 		 */
-
+		dialog.addCheckbox( "Break cell divisions (create new tracks)", defaultBreakDiv );
+		final Checkbox checkbox = ( Checkbox ) dialog.getCheckboxes().lastElement();
 		dialog.addCheckbox( "Crop on import", defaultDoCrop );
-		final Checkbox checkbox = ( Checkbox ) dialog.getCheckboxes().get( 0 );
+		final Checkbox checkbox = ( Checkbox ) dialog.getCheckboxes().lastElement();
 
 		dialog.addNumericField( "X from", defaultXFrom, 1 );
 		dialog.addNumericField( "X to", defaultXTo, 1 );
@@ -218,6 +220,7 @@ public class ImportTGMMAnnotationPlugin_ implements PlugIn
 		final String xmlHDF5Path = dialog.getNextString();
 		final String tgmmPath = dialog.getNextString();
 		final String outputPath = dialog.getNextString();
+		final boolean doBreakDiv = dialog.getNextBoolean();		
 		final boolean doCrop = dialog.getNextBoolean();
 		final RealInterval interval;
 		int tFrom = 0;
@@ -307,10 +310,10 @@ public class ImportTGMMAnnotationPlugin_ implements PlugIn
 
 		final int angleIndex = dialogAngles.getNextChoiceIndex();
 		final int setupID = spimData.getSequenceDescription().getViewSetupsOrdered().get( angleIndex ).getId();
-		exec( xmlHDF5Path, setupID, tgmmPath, outputPath, interval, tFrom, tTo );
+		exec( xmlHDF5Path, setupID, tgmmPath, outputPath, interval, tFrom, tTo, doBreakDiv );
 	}
 
-	public void exec( final String xmlHDF5Path, final int setupID, final String tgmmPath, final String outputPath, final RealInterval interval, final int tFrom, final int tTo )
+	public void exec( final String xmlHDF5Path, final int setupID, final String tgmmPath, final String outputPath, final RealInterval interval, final int tFrom, final int tTo, final boolean doBreakDiv )
 	{
 		SpimDataMinimal spimData;
 		try
@@ -322,7 +325,7 @@ public class ImportTGMMAnnotationPlugin_ implements PlugIn
 			logger.error( "Problem reading the transforms in image data file:\n" + e.getMessage() + "\n" );
 			return;
 		}
-		final Model model = createModel( new File( tgmmPath ), spimData, setupID, interval, tFrom, tTo );
+		final Model model = createModel( new File( tgmmPath ), spimData, setupID, interval, tFrom, tTo, doBreakDiv );
 		model.setLogger( logger );
 		final Settings settings = createSettings( new File( xmlHDF5Path ) );
 
@@ -418,7 +421,7 @@ public class ImportTGMMAnnotationPlugin_ implements PlugIn
 		return settings;
 	}
 
-	protected Model createModel( final File tgmmFolder, final SpimDataMinimal spimData, final int setupID, final RealInterval interval, final int tFrom, final int tTo )
+	protected Model createModel( final File tgmmFolder, final SpimDataMinimal spimData, final int setupID, final RealInterval interval, final int tFrom, final int tTo, final boolean doBreakDiv )
 	{
 
 		final SequenceDescriptionMinimal seq = spimData.getSequenceDescription();
@@ -429,7 +432,7 @@ public class ImportTGMMAnnotationPlugin_ implements PlugIn
 			transforms.add( regs.getViewRegistration( t.getId(), setupID ).getModel() );
 		}
 
-		final TGMMImporter2 importer = new TGMMImporter2( tgmmFolder, transforms, TGMMImporter2.DEFAULT_PATTERN, logger, interval, tFrom, tTo );
+		final TGMMImporter2 importer = new TGMMImporter2( tgmmFolder, transforms, TGMMImporter2.DEFAULT_PATTERN, logger, interval, tFrom, tTo, doBreakDiv );
 		if ( !importer.checkInput() || !importer.process() )
 		{
 			logger.error( importer.getErrorMessage() );

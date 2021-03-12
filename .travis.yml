@@ -17,7 +17,7 @@ deploy:
     #sudo apt install ruby
     #sudo gem install travis
     #travis login --pro --github-token GITHUB_API_KEY_HERE_NO_QUOTES
-    #travis encrypt -r mhdominguez/MaMuT --pro GITHUB_API_KEY_HERE_NO_QUOTES
+    #travis encrypt -r mhdominguez/MaMuT --pro GITHUB_API_KEY_HERE_NO_QUOTES 
   - secure: "FzJdtdUVmkaTTx6TrDQde4D9Le5OqwQdCBNq7mZy2zQpFuceIyOQN/hs14nhJEKGUM/jhTHJQhRzmGl4dhI+UzxYUlj0m8ij7oHXDnQfPRtaVgALK47CC4xHechDg4peRehDRnbKFNRHDi2+/ojTOsu6MGb7X6zLp6drt3M3LOdqQ3+YxhqvMt2u6afSctSzlytRE+Kd4IHRPsg2pSGdC0Bu5XDOXPWomQMCax2NOe1Uguv1t+YY02fhc99nx+XWbxBy5czIPbnijrV4+Hmv4xAunoPSP6z6H1HOcTgKLD7Gkg4QK6mQ61OFl7tvrbmdYo02U818hZGc1ONvlxTtMkwMPJtYOt09tr8hfUsMHXDGFvAyIt4unuDoBsAy8ephnAI3GQKPyU23KltwooN4khkFz2k4PuFB5RaHZtDW/nEJoKDiet60Vy9MjKLzVJ7tRL0TzE62ECXCQp4OeqTd4ZjUv+YFEcxNlrWr5zdLF6C1Gi9M4PE7HQPuZBl4W1HeGAO1XxJgZOthjEDSYR8FywieRbneNb14pYVqW1VTX569ib/oso5Yn4ELfJDFVs5RbU5Jfx27x++fRyyVWrvrOKMPTfH8FjMSEwynFKOIqIyyksonZF185X6s/w5pXa2IlkDxu1cytafbFelkv8h3LkLD9vEQfGxHYP6g+KuaGnw="
   file_glob: true
   file: target/*.jar

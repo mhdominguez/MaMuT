@@ -447,8 +447,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 				for ( final DefaultWeightedEdge edge_1 : graph.edgeSet() )
 				{
 					//check for edge_1 source already in remove list
-					final Spot edge_1_added_target = edge_remove_list.get( graph.getEdgeSource( edge_1 ) );
-					if ( edge_1_added_target != null )
+					if ( edge_remove_list.containsKey( graph.getEdgeSource( edge_1 ) ) )
 						continue;
 						
 					for ( final DefaultWeightedEdge edge_2 : graph.edgeSet() )
@@ -457,8 +456,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 							continue;					
 						
 						//check for edge_2 source already in remove list
-						final Spot edge_2_added_target = edge_remove_list.get( graph.getEdgeSource( edge_2 ) );
-						if ( edge_2_added_target != null )
+						if ( edge_remove_list.containsKey( graph.getEdgeSource( edge_2 ) ) )
 							continue;
 							
 						if ( graph.getEdgeSource( edge_2 ) == graph.getEdgeSource( edge_1 ) ) //found two daughters of same parent

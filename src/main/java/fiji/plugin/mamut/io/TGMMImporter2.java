@@ -443,8 +443,8 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 			 */
 			 if ( doBreakDiv )
 			 {
-			 	Map< Spot, Spot > edge_remove_list;
-				for ( final DefaultWeightedEdge edge_1 : graph.edgeSet() )
+			 	Map< Spot, Spot > edge_remove_list = new HashMap<>( graph.edgeSet().size()/10 );
+				for ( final DefaultWeightedEdge edge_1 :  )
 				{
 					//check for edge_1 source already in remove list
 					if ( edge_remove_list.containsKey( graph.getEdgeSource( edge_1 ) ) )

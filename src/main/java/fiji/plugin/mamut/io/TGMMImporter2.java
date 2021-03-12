@@ -447,7 +447,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 				for ( final DefaultWeightedEdge edge_1 : graph.edgeSet() )
 				{
 					//check for edge_1 source already in remove list
-					final Spot edge_1_added_target = edge_remove_list.get( graph.getEdgeSource( edge_1 ) )
+					final Spot edge_1_added_target = edge_remove_list.get( graph.getEdgeSource( edge_1 ) );
 					if ( edge_1_added_target != null )
 						continue;
 						
@@ -457,7 +457,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 							continue;					
 						
 						//check for edge_2 source already in remove list
-						final Spot edge_2_added_target = edge_remove_list.get( graph.getEdgeSource( edge_2 ) )
+						final Spot edge_2_added_target = edge_remove_list.get( graph.getEdgeSource( edge_2 ) );
 						if ( edge_2_added_target != null )
 							continue;
 							
@@ -476,7 +476,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 				}
 				
 				//remove edges
-				edge_remove_list.forEach((a,b)->graph.removeEdge(a,b);
+				edge_remove_list.forEach((a,b)->graph.removeEdge(a,b));
 			}			
 		}
 		catch ( final JDOMException e )

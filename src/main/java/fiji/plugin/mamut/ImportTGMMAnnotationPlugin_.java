@@ -176,7 +176,7 @@ public class ImportTGMMAnnotationPlugin_ implements PlugIn
 		 * Interval controls
 		 */
 		dialog.addCheckbox( "Break cell divisions (create new tracks)", defaultBreakDiv );
-		final Checkbox checkbox = ( Checkbox ) dialog.getCheckboxes().lastElement();
+		final Checkbox break_checkbox = ( Checkbox ) dialog.getCheckboxes().lastElement();
 		dialog.addCheckbox( "Crop on import", defaultDoCrop );
 		final Checkbox checkbox = ( Checkbox ) dialog.getCheckboxes().lastElement();
 

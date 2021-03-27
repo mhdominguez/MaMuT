@@ -130,6 +130,8 @@ public class ImportTGMMAnnotationPlugin_ implements PlugIn
 	private static String defaultTGMMPath;
 
 	private static String defaultXmlHDF5Path;
+	
+	private static final String[] breakDivNames = new String[]{ "Leave intact (default)", "Unlink farthest daughters (very slow)", "Unlink all splits" }; 
 
 	@Override
 	public void run( final String arg )
@@ -177,7 +179,6 @@ public class ImportTGMMAnnotationPlugin_ implements PlugIn
 		 */
 		//dialog.addCheckbox( "Break cell divisions (create new tracks)", defaultBreakDiv );
 		//final Checkbox break_checkbox = ( Checkbox ) dialog.getCheckboxes().lastElement();
-		final String[] breakDivNames = [ "Leave intact (default)", "Unlink farthest daughters (very slow)", "Unlink all splits" ]; 
 		dialog.addChoice( "Break splits/divisions (create new tracks):", breakDivNames, breakDivNames[ 0 ] );
 		
 		

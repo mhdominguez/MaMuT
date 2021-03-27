@@ -107,13 +107,13 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 
 	private final int tTo;
 	
-	private final boolean doBreakDiv;	
+	private final int doBreakDiv;	
 
 	/*
 	 * CONSTRUCTORS
 	 */
 
-	public TGMMImporter2( final File file, final List< AffineTransform3D > transforms, final Pattern framePattern, final Logger logger, final RealInterval interval, final int tFrom, final int tTo, final boolean doBreakDiv )
+	public TGMMImporter2( final File file, final List< AffineTransform3D > transforms, final Pattern framePattern, final Logger logger, final RealInterval interval, final int tFrom, final int tTo, final int doBreakDiv )
 	{
 		this.file = file;
 		this.framePattern = framePattern;
@@ -441,7 +441,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 			/*
 			 * Break divisions, leaving only closest daughter attached
 			 */
-			 if ( doBreakDiv )
+			 if ( doBreakDiv == 2 )
 			 {
 			 	Map< Spot, Spot > edge_remove_list = new HashMap<>( graph.edgeSet().size()/10 );
 				for ( final DefaultWeightedEdge edge_1 : graph.edgeSet() )
@@ -475,7 +475,35 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 				
 				//remove edges
 				edge_remove_list.forEach((a,b)->graph.removeEdge(a,b));
-			}			
+			}
+			else if ( doBreakDiv == 1 ) {
+			 	Map< Spot, Spot > edge_remove_list = new HashMap<>( graph.edgeSet().size()/10 );
+				for ( final DefaultWeightedEdge edge_1 : graph.edgeSet() )
+				{
+					//check for edge_1 source already in remove list
+					if ( edge_remove_list.containsKey( graph.getEdgeSource( edge_1 ) ) )
+						continue;
+						
+					for ( final DefaultWeightedEdge edge_2 : graph.edgeSet() )
+					{
+						if ( edge_2 == edge_1 )
+							continue;					
+						
+						//check for edge_2 source already in remove list
+						if ( edge_remove_list.containsKey( graph.getEdgeSource( edge_2 ) ) )
+							continue;
+							
+						if ( graph.getEdgeSource( edge_2 ) == graph.getEdgeSource( edge_1 ) ) //found two daughters of same parent
+						{
+							edge_remove_list.put(graph.getEdgeSource( edge_1 ),graph.getEdgeTarget( edge_1 ));
+							edge_remove_list.put(graph.getEdgeSource( edge_2 ),graph.getEdgeTarget( edge_2 ));
+						}
+					}
+				}
+				
+				//remove edges
+				edge_remove_list.forEach((a,b)->graph.removeEdge(a,b));
+			}
 		}
 		catch ( final JDOMException e )
 		{

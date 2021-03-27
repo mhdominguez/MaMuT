@@ -175,8 +175,12 @@ public class ImportTGMMAnnotationPlugin_ implements PlugIn
 		/*
 		 * Interval controls
 		 */
-		dialog.addCheckbox( "Break cell divisions (create new tracks)", defaultBreakDiv );
-		final Checkbox break_checkbox = ( Checkbox ) dialog.getCheckboxes().lastElement();
+		//dialog.addCheckbox( "Break cell divisions (create new tracks)", defaultBreakDiv );
+		//final Checkbox break_checkbox = ( Checkbox ) dialog.getCheckboxes().lastElement();
+		final String[] breakDivNames = [ "Leave intact (default)", "Unlink farthest daughters (very slow)", "Unlink all splits" ]; 
+		dialog.addChoice( "Break splits/divisions (create new tracks):", breakDivNames, breakDivNames[ 0 ] );
+		
+		
 		dialog.addCheckbox( "Crop on import", defaultDoCrop );
 		final Checkbox checkbox = ( Checkbox ) dialog.getCheckboxes().lastElement();
 
@@ -220,7 +224,7 @@ public class ImportTGMMAnnotationPlugin_ implements PlugIn
 		final String xmlHDF5Path = dialog.getNextString();
 		final String tgmmPath = dialog.getNextString();
 		final String outputPath = dialog.getNextString();
-		final boolean doBreakDiv = dialog.getNextBoolean();		
+		final int doBreakDiv = dialog.getNextChoiceIndex();
 		final boolean doCrop = dialog.getNextBoolean();
 		final RealInterval interval;
 		int tFrom = 0;
@@ -313,7 +317,7 @@ public class ImportTGMMAnnotationPlugin_ implements PlugIn
 		exec( xmlHDF5Path, setupID, tgmmPath, outputPath, interval, tFrom, tTo, doBreakDiv );
 	}
 
-	public void exec( final String xmlHDF5Path, final int setupID, final String tgmmPath, final String outputPath, final RealInterval interval, final int tFrom, final int tTo, final boolean doBreakDiv )
+	public void exec( final String xmlHDF5Path, final int setupID, final String tgmmPath, final String outputPath, final RealInterval interval, final int tFrom, final int tTo, final int doBreakDiv )
 	{
 		SpimDataMinimal spimData;
 		try
@@ -421,7 +425,7 @@ public class ImportTGMMAnnotationPlugin_ implements PlugIn
 		return settings;
 	}
 
-	protected Model createModel( final File tgmmFolder, final SpimDataMinimal spimData, final int setupID, final RealInterval interval, final int tFrom, final int tTo, final boolean doBreakDiv )
+	protected Model createModel( final File tgmmFolder, final SpimDataMinimal spimData, final int setupID, final RealInterval interval, final int tFrom, final int tTo, final int doBreakDiv )
 	{
 
 		final SequenceDescriptionMinimal seq = spimData.getSequenceDescription();

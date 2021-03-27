@@ -2,7 +2,7 @@
  * #%L
  * Fiji plugin for the annotation of massive, multi-view data.
  * %%
- * Copyright (C) 2012 - 2016 MaMuT development team.
+ * Copyright (C) 2012 - 2021 MaMuT development team.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -27,7 +27,6 @@ import javax.swing.ImageIcon;
 
 import bdv.cache.CacheControl;
 import bdv.tools.bookmarks.Bookmarks;
-import bdv.util.BehaviourTransformEventHandlerPlanar;
 import bdv.viewer.Source;
 import bdv.viewer.SourceAndConverter;
 import bdv.viewer.ViewerOptions;
@@ -101,9 +100,7 @@ public class MamutViewerFactory implements ViewFactory
 			}
 		}
 
-		final ViewerOptions options = ViewerOptions.options();
-		if ( is2D )
-			options.transformEventHandlerFactory( BehaviourTransformEventHandlerPlanar.factory() );
+		final ViewerOptions options = ViewerOptions.options().is2D( is2D );
 
 		return new MamutViewer( DEFAULT_WIDTH, DEFAULT_HEIGHT,
 				sources, numTimePoints, cache,

@@ -2,18 +2,18 @@
  * #%L
  * Fiji plugin for the annotation of massive, multi-view data.
  * %%
- * Copyright (C) 2012 - 2016 MaMuT development team.
+ * Copyright (C) 2012 - 2021 MaMuT development team.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- *
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
@@ -40,6 +40,7 @@ import static fiji.plugin.trackmate.visualization.TrackMateModelView.KEY_TRACK_C
 import static fiji.plugin.trackmate.visualization.TrackMateModelView.KEY_TRACK_DISPLAY_DEPTH;
 import static fiji.plugin.trackmate.visualization.TrackMateModelView.KEY_TRACK_DISPLAY_MODE;
 
+import bdv.viewer.ConverterSetups;
 import java.awt.Dimension;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -91,7 +92,6 @@ import bdv.tools.brightness.BrightnessDialog;
 import bdv.tools.brightness.ConverterSetup;
 import bdv.tools.brightness.SetupAssignments;
 import bdv.tools.transformation.ManualTransformationEditor;
-import bdv.util.BehaviourTransformEventHandlerPlanar;
 import bdv.viewer.RequestRepaint;
 import bdv.viewer.Source;
 import bdv.viewer.SourceAndConverter;
@@ -201,6 +201,8 @@ public class MaMuT implements ModelChangeListener
 
 	/** The image data sources to be displayed in the views. */
 	private List< SourceAndConverter< ? > > sources;
+
+	private ArrayList< ConverterSetup > converterSetups;
 
 	private CacheControl cache;
 
@@ -624,69 +626,8 @@ public class MaMuT implements ModelChangeListener
 		nTimepoints = timepoints.size();
 		sources = new ArrayList<>();
 		cache = ( ( ViewerImgLoader ) seq.getImgLoader() ).getCacheControl();
-		final ArrayList< ConverterSetup > converterSetups = new ArrayList<>();
+		converterSetups = new ArrayList<>();
 		BigDataViewer.initSetups( spimData, converterSetups, sources );
-		for ( int i = 0; i < converterSetups.size(); ++i )
-		{
-			final ConverterSetup s = converterSetups.get( i );
-			converterSetups.set( i, new ConverterSetup()
-			{
-
-				@Override
-				public void setDisplayRange( final double min, final double max )
-				{
-					s.setDisplayRange( min, max );
-					requestRepaintAllViewers();
-				}
-
-				@Override
-				public void setColor( final ARGBType color )
-				{
-					s.setColor( color );
-					requestRepaintAllViewers();
-				}
-
-				@Override
-				public int getSetupId()
-				{
-					return s.getSetupId();
-				}
-
-				@Override
-				public double getDisplayRangeMin()
-				{
-					return s.getDisplayRangeMin();
-				}
-
-				@Override
-				public double getDisplayRangeMax()
-				{
-					return s.getDisplayRangeMax();
-				}
-
-				@Override
-				public ARGBType getColor()
-				{
-					return s.getColor();
-				}
-
-				@Override
-				public boolean supportsColor()
-				{
-					return true;
-				}
-
-				@Override
-				public void setViewer( final RequestRepaint rp )
-				{}
-
-				@Override
-				public Listeners< SetupChangeListener > setupChangeListeners()
-				{
-					return null;
-				}
-			} );
-		}
 		setupAssignments = new SetupAssignments( converterSetups, 0, 65535 );
 	}
 
@@ -1052,9 +993,7 @@ public class MaMuT implements ModelChangeListener
 			}
 		}
 
-		final ViewerOptions options = ViewerOptions.options();
-		if ( is2D )
-			options.transformEventHandlerFactory( BehaviourTransformEventHandlerPlanar.factory() );
+		final ViewerOptions options = ViewerOptions.options().is2D( is2D );
 
 		final MamutViewer viewer = new MamutViewer(
 				DEFAULT_WIDTH, DEFAULT_HEIGHT,
@@ -1062,6 +1001,18 @@ public class MaMuT implements ModelChangeListener
 				model, selectionModel,
 				options,
 				bookmarks );
+
+		final ConverterSetups setups = viewer.getConverterSetups();
+		if ( converterSetups.size() != sources.size() )
+			System.err.println( "WARNING! Constructing BigDataViewer, with converterSetups.size() that is not the same as sources.size()." );
+		final int numSetups = Math.min( converterSetups.size(), sources.size() );
+		for ( int i = 0; i < numSetups; ++i )
+		{
+			final SourceAndConverter< ? > source = sources.get( i );
+			final ConverterSetup setup = converterSetups.get( i );
+			if ( setup != null )
+				setups.put( source, setup );
+		}
 
 		for ( final String key : guimodel.getDisplaySettings().keySet() )
 			viewer.setDisplaySettings( key, guimodel.getDisplaySettings().get( key ) );

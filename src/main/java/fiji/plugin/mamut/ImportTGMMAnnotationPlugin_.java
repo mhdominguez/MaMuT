@@ -110,17 +110,17 @@ public class ImportTGMMAnnotationPlugin_ implements PlugIn
 
 	private static int defaultTFrom = 0;
 
-	private static double defaultZTo = 511;
+	private static double defaultZTo = 3000;
 
-	private static double defaultZFrom = 0;
+	private static double defaultZFrom = -3000;
 
-	private static double defaultYTo = 511;
+	private static double defaultYTo = 3000;
 
-	private static double defaultYFrom = 0;
+	private static double defaultYFrom = -3000;
 
-	private static double defaultXTo = 511;
+	private static double defaultXTo = 3000;
 
-	private static double defaultXFrom = 0;
+	private static double defaultXFrom = -3000;
 
 	private static boolean defaultDoCrop = false;
 	private static boolean defaultBreakDiv = false;

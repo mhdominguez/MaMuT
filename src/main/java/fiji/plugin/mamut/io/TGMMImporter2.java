@@ -197,7 +197,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 			try
 			{
 				final int frame = Integer.parseInt( strFrame );
-				frames[ frame ] = i;
+				frames[ i ] = frame;
 			}
 			catch ( final NumberFormatException nfe )
 			{

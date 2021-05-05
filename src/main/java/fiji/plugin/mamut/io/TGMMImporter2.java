@@ -232,7 +232,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 					continue;
 				}
 
-				logger.log( "Processing frame " + t + ". " );
+				logger.log( "Processing frame " + frames[ t ] + ". " );
 				final AffineTransform3D transform = transforms.get( frames[ t ] );
 
 				xmlFile = xmlFiles[ t ];
@@ -433,7 +433,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 				 * Finished inspecting a frame. Store it in the spot collection.
 				 */
 
-				sc.put( t, spots );
+				sc.put( frames[ t ], spots );
 				previousSpotID = currentSpotID;
 				logger.log( "Found " + spots.size() + " spots.\n" );
 				logger.setProgress( ( double ) t / frames.length );

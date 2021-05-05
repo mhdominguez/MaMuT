@@ -235,7 +235,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 				logger.log( "Processing frame " + t + ". " );
 				final AffineTransform3D transform = transforms.get( frames[ t ] );
 
-				xmlFile = xmlFiles[ frames[ t ] ];
+				xmlFile = xmlFiles[ t ];
 				final Document doc = saxBuilder.build( xmlFile );
 				final Element root = doc.getRootElement();
 				final List< Element > detectionEls = root.getChildren( XML_DETECTION_NAME );

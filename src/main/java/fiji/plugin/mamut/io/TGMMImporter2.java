@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -173,7 +174,8 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 		 */
 
 		final File[] xmlFiles = file.listFiles( xmlFilter );
-
+		Arrays.sort(xmlFiles);
+		
 		/*
 		 * Extract frame information from filename. It is not stored elsewhere
 		 * so we have to rely on a specific pattern to get it. Note that it is

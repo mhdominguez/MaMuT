@@ -326,8 +326,8 @@ public class MamutOverlay
 								triangleVector[0] = localEnd[0] - localBegin[0]; triangleVector[1] = localEnd[1] - localBegin[1]; triangleVector[2] = localEnd[2] - localBegin[2];
 								
 								//are we in view or not; if not, shrink radius considerably
-								if ( triangleCenter[ 2 ] * triangleCenter[ 2 ] < rad * rad )
-									rad = 3;
+								if ( triangleCenter[ 2 ] * triangleCenter[ 2 ] > rad * rad )
+									rad = 4;
 									
 								//normalize vector length to the desired radius
 								final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1] + triangleVector[2]*triangleVector[2]) / rad;
@@ -338,7 +338,7 @@ public class MamutOverlay
 								if ( null == viewer.spotColorProvider || null == color )
 									color = TrackMateModelView.DEFAULT_SPOT_COLOR;
 								g.setColor( color );
-								g.setStroke( NORMAL_STROKE );
+								g.setStroke( SELECTION_STROKE );
 								
 								//rotate the trajectory vector +60 and -60 in the Z axis, to produce the vectors emanating from triangleCenter and ending on the other two points of the triangle
 								final int[] x = new int[] {(int)(triangleCenter[0]+triangleVector[0]),(int)(triangleCenter[0]+triangleVector[0]*COSINE_60-triangleVector[1]*SINE_60),(int)(triangleCenter[0]+triangleVector[0]*COSINE_NEG60-triangleVector[1]*SINE_NEG60)};

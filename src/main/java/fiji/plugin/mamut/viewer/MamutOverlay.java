@@ -318,14 +318,14 @@ public class MamutOverlay
 							if ( !doLimitDrawingDepth || Math.abs( triangleCenter[2] ) > drawingDepth )
 							{
 								//final double dz2 = triangleCenter[ 2 ] * triangleCenter[ 2 ];
-								final double rad = spotRadius * transformScale * radiusRatio;
+								double rad = spotRadius * transformScale * radiusRatio;
 									
 								//determine rise/run for the local track
 								triangleVector[0] = localEnd[0] - localBegin[0]; triangleVector[1] = localEnd[1] - localBegin[1]; triangleVector[2] = localEnd[2] - localBegin[2];
 								
 								//are we in view or not; if not, shrink radius considerably
 								if ( triangleCenter[ 2 ] * triangleCenter[ 2 ] < rad * rad )
-									rad = 3;								
+									rad = 3;
 									
 								//normalize vector length to the desired radius
 								final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1] + triangleVector[2]*triangleVector[2]) / rad;
@@ -341,7 +341,7 @@ public class MamutOverlay
 								//rotate the trajectory vector +60 and -60 in the Z axis, to produce the vectors emanating from triangleCenter and ending on the other two points of the triangle
 								final double[] x = new double[] {triangleCenter[0]+triangleVector[0],triangleCenter[0]+triangleVector[0]*COSINE_60-triangleVector[1]*SINE_60,triangleCenter[0]+triangleVector[0]*COSINE_NEG60-triangleVector[1]*SINE_NEG60};
 								final double[] y = new double[] {triangleCenter[1]+triangleVector[1],triangleCenter[1]+triangleVector[0]*COSINE_60+triangleVector[1]*SINE_60,triangleCenter[1]+triangleVector[0]*COSINE_NEG60+triangleVector[1]*SINE_NEG60};
-								g.DrawPolygon(x,y,3);
+								g.drawPolygon(x,y,3);
 							}
 						}
 					}

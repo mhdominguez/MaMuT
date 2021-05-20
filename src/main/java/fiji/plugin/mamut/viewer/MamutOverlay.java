@@ -53,6 +53,7 @@ public class MamutOverlay
 	protected static final Font DEFAULT_FONT = new Font( "Monospaced", Font.PLAIN, 10 );
 
 	protected static final Stroke SELECTION_STROKE = new BasicStroke( 4.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND );
+	protected static final Stroke HALF_SELECTION_STROKE = new BasicStroke( 2.0f, BasicStroke.JOIN_ROUND );
 
 	protected static final Stroke NORMAL_STROKE = new BasicStroke();
 	
@@ -310,6 +311,7 @@ public class MamutOverlay
 							}
 							
 							//now, draw track edges
+							g.setStroke( NORMAL_STROKE );
 							g.setColor( viewer.trackColorProvider.color( edge ) );
 							drawEdge( g, source, target, transform, 1f, doLimitDrawingDepth, drawingDepth );
 						}
@@ -338,11 +340,11 @@ public class MamutOverlay
 								if ( null == viewer.spotColorProvider || null == color )
 									color = TrackMateModelView.DEFAULT_SPOT_COLOR;
 								g.setColor( color );
-								g.setStroke( SELECTION_STROKE );
 								
 								//rotate the trajectory vector +60 and -60 in the Z axis, to produce the vectors emanating from triangleCenter and ending on the other two points of the triangle
 								final int[] x = new int[] {(int)(triangleCenter[0]+triangleVector[0]),(int)(triangleCenter[0]+triangleVector[0]*COSINE_60-triangleVector[1]*SINE_60),(int)(triangleCenter[0]+triangleVector[0]*COSINE_NEG60-triangleVector[1]*SINE_NEG60)};
 								final int[] y = new int[] {(int)(triangleCenter[1]+triangleVector[1]),(int)(triangleCenter[1]+triangleVector[0]*COSINE_60+triangleVector[1]*SINE_60),(int)(triangleCenter[1]+triangleVector[0]*COSINE_NEG60+triangleVector[1]*SINE_NEG60)};
+								g.setStroke( HALF_SELECTION_STROKE );
 								g.drawPolygon(x,y,3);
 							}
 						}

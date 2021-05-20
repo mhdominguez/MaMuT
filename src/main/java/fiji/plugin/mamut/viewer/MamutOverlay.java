@@ -55,6 +55,11 @@ public class MamutOverlay
 	protected static final Stroke SELECTION_STROKE = new BasicStroke( 4.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND );
 
 	protected static final Stroke NORMAL_STROKE = new BasicStroke();
+	
+	protected static final float SINE_60 = (float) Math.sin(Math.toRadians(60))
+	protected static final float COSINE_60 = (float) Math.cos(Math.toRadians(60))
+	protected static final float SINE_NEG60 = (float) Math.sin(Math.toRadians(-60))
+	protected static final float COSINE_NEG60 = (float) Math.cos(Math.toRadians(-60))
 
 	/** The viewer state. */
 	protected ViewerState state;
@@ -96,15 +101,17 @@ public class MamutOverlay
 		final boolean doLimitDrawingDepth = ( Boolean ) viewer.displaySettings.get( TrackMateModelView.KEY_LIMIT_DRAWING_DEPTH );
 		final double drawingDepth = ( Double ) viewer.displaySettings.get( TrackMateModelView.KEY_DRAWING_DEPTH );
 		final int trackDisplayMode = ( Integer ) viewer.displaySettings.get( TrackMateModelView.KEY_TRACK_DISPLAY_MODE );
-
+		final int trackDisplayDepth = ( Integer ) viewer.displaySettings.get( TrackMateModelView.KEY_TRACK_DISPLAY_DEPTH );
+		final boolean tracksVisible = ( Boolean ) viewer.displaySettings.get( TrackMateModelView.KEY_TRACKS_VISIBLE );
+		final double radiusRatio = ( Double ) viewer.displaySettings.get( KEY_SPOT_RADIUS_RATIO );
+		final boolean drawCellTriangles = ( Boolean ) !( (( Boolean ) viewer.displaySettings.get( KEY_SPOTS_VISIBLE )) && tracksVisible && trackDisplayDepth > 0 && trackDisplayMode == TrackMateModelView.TRACK_DISPLAY_MODE_WHOLE );
+		
 		/*
 		 * Draw spots.
 		 */
 
-		if ( ( Boolean ) viewer.displaySettings.get( KEY_SPOTS_VISIBLE ) )
+		if ( (( Boolean ) viewer.displaySettings.get( KEY_SPOTS_VISIBLE )) && !(drawCellTriangles) ) //don't draw spots if we are drawing triangles instead
 		{
-
-			final double radiusRatio = ( Double ) viewer.displaySettings.get( KEY_SPOT_RADIUS_RATIO );
 			final boolean doDisplayNames = ( Boolean ) viewer.displaySettings.get( KEY_DISPLAY_SPOT_NAMES );
 
 			/*
@@ -202,7 +209,7 @@ public class MamutOverlay
 		 * Draw edges
 		 */
 
-		final boolean tracksVisible = ( Boolean ) viewer.displaySettings.get( TrackMateModelView.KEY_TRACKS_VISIBLE );
+		
 
 		if ( tracksVisible && model.getTrackModel().nTracks( false ) > 0 )
 		{
@@ -216,7 +223,7 @@ public class MamutOverlay
 
 			// Non-selected tracks.
 			final int currentFrame = state.getCurrentTimepoint();
-			final int trackDisplayDepth = ( Integer ) viewer.displaySettings.get( TrackMateModelView.KEY_TRACK_DISPLAY_DEPTH );
+			
 			final Set< Integer > filteredTrackIDs = model.getTrackModel().unsortedTrackIDs( true );
 
 			g.setStroke( NORMAL_STROKE );
@@ -253,6 +260,90 @@ public class MamutOverlay
 
 			case TrackMateModelView.TRACK_DISPLAY_MODE_WHOLE:
 			{
+				if ( drawCellTriangles )
+				{
+					double localBegin[] = new double[3];
+					double localEnd[] = new double[3]; 
+					double triangleVector[] = new double[3];
+					double triangleCenter[] = new double[3];
+					double spotRadius;
+					Color color = null;
+					
+					for ( final Integer trackID : filteredTrackIDs )
+					{
+						viewer.trackColorProvider.setCurrentTrackID( trackID );
+						final Set< DefaultWeightedEdge > track = new HashSet<>( model.getTrackModel().trackEdges( trackID ) );
+						triangleCenter = {0,0,0};
+						localEnd = {0,0,0};
+						localBegin = {0,0,0};
+						spotRadius = 10; //default value to make sure it prints
+						color = null;
+
+						for ( final DefaultWeightedEdge edge : track )
+						{
+							source = model.getTrackModel().getEdgeSource( edge );
+							sourceFrame = source.getFeature( Spot.FRAME ).intValue();
+							target = model.getTrackModel().getEdgeTarget( edge );
+							
+							if ( sourceFrame == currentFrame )
+							{
+								//draw trangle center here -- already viewer-transformed
+								//triangleCenter = { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) };
+								transform.apply(  { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) }, triangleCenter );
+								spotRadius = source.getFeature( Spot.RADIUS );
+								color = viewer.spotColorProvider.color( source )
+							}
+							else if ( sourceFrame == minT )
+							{
+								//set beginning of direction vector here -- already viewer-transformed
+								transform.apply(  { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) }, localBegin );
+								//localBegin = { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) };
+							}							
+							else if ( sourceFrame == maxT )
+							{
+								//set end of direction vector here -- already viewer-transformed
+								transform.apply(  { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) }, localEnd );
+								//localEnd = { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) };
+							}
+							
+							//now, draw track edges
+							g.setColor( viewer.trackColorProvider.color( edge ) );
+							drawEdge( g, source, target, transform, 1f, doLimitDrawingDepth, drawingDepth );
+						}
+						
+						//now, draw triangle as established above
+						if ( (triangleCenter[0] != triangleCenter[1] || triangleCenter[0] != triangleCenter[2] || localBegin[0] != localEnd[0] || localBegin[1] != localEnd[1] || localBegin[2] != localEnd[2]) && spotRadius > 0 )
+						{
+							if ( !doLimitDrawingDepth || Math.abs( triangleCenter[2] ) > drawingDepth )
+							{
+								//final double dz2 = triangleCenter[ 2 ] * triangleCenter[ 2 ];
+								final double rad = spotRadius * transformScale * radiusRatio;
+									
+								//determine rise/run for the local track
+								triangleVector[0] = localEnd[0] - localBegin[0]; triangleVector[1] = localEnd[1] - localBegin[1]; triangleVector[2] = localEnd[2] - localBegin[2];
+								
+								//are we in view or not; if not, shrink radius considerably
+								if ( triangleCenter[ 2 ] * triangleCenter[ 2 ] < rad * rad )
+									rad = 3;								
+									
+								//normalize vector length to the desired radius
+								final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1] + triangleVector[2]*triangleVector[2]) / rad;
+								triangleVector[0] /= vecNormalize; triangleVector[1] /= vecNormalize; triangleVector[2] /= vecNormalize; //Z coordinate actually doesn't need to get normalized
+								
+								//set up drawing parameters
+								
+								if ( null == viewer.spotColorProvider || null == color )
+									color = TrackMateModelView.DEFAULT_SPOT_COLOR;
+								g.setColor( color );
+								g.setStroke( NORMAL_STROKE );
+								
+								//rotate the trajectory vector +60 and -60 in the Z axis, to produce the vectors emanating from triangleCenter and ending on the other two points of the triangle
+								g.DrawPolygon({triangleCenter[0]+triangleVector[0],triangleCenter[0]+triangleVector[0]*COSINE_60-triangleVector[1]*SINE_60,triangleCenter[0]+triangleVector[0]*COSINE_NEG60-triangleVector[1]*SINE_NEG60},{triangleCenter[1]+triangleVector[1],triangleCenter[1]+triangleVector[0]*COSINE_60+triangleVector[1]*SINE_60,triangleCenter[1]+triangleVector[0]*COSINE_NEG60+triangleVector[1]*SINE_NEG60},3);
+							}
+						}
+					}
+					break;
+				} //else below
 				for ( final Integer trackID : filteredTrackIDs )
 				{
 					viewer.trackColorProvider.setCurrentTrackID( trackID );
@@ -266,6 +357,7 @@ public class MamutOverlay
 						drawEdge( g, source, target, transform, 1f, doLimitDrawingDepth, drawingDepth );
 					}
 				}
+
 				break;
 			}
 

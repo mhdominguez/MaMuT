@@ -104,7 +104,7 @@ public class MamutOverlay
 		final int trackDisplayDepth = ( Integer ) viewer.displaySettings.get( TrackMateModelView.KEY_TRACK_DISPLAY_DEPTH );
 		final boolean tracksVisible = ( Boolean ) viewer.displaySettings.get( TrackMateModelView.KEY_TRACKS_VISIBLE );
 		final double radiusRatio = ( Double ) viewer.displaySettings.get( KEY_SPOT_RADIUS_RATIO );
-		final boolean drawCellTriangles = ( Boolean ) !( (( Boolean ) viewer.displaySettings.get( KEY_SPOTS_VISIBLE )) && tracksVisible && trackDisplayDepth > 0 && trackDisplayMode == TrackMateModelView.TRACK_DISPLAY_MODE_WHOLE );
+		final boolean drawCellTriangles = ( Boolean ) ( (( Boolean ) viewer.displaySettings.get( KEY_SPOTS_VISIBLE )) && tracksVisible && trackDisplayDepth > 0 && trackDisplayDepth < 1_000_000_000 && trackDisplayMode == TrackMateModelView.TRACK_DISPLAY_MODE_WHOLE );
 		
 		/*
 		 * Compute scale
@@ -262,7 +262,9 @@ public class MamutOverlay
 			case TrackMateModelView.TRACK_DISPLAY_MODE_WHOLE:
 			{
 				if ( drawCellTriangles )
-				{			
+				{
+					minT = currentFrame - trackDisplayDepth;
+					maxT = currentFrame + trackDisplayDepth;				
 					for ( final Integer trackID : filteredTrackIDs )
 					{
 						final double[] localBegin = new double[] {0,0,0};
@@ -325,7 +327,7 @@ public class MamutOverlay
 								
 								//are we in view or not; if not, shrink radius considerably
 								if ( triangleCenter[ 2 ] * triangleCenter[ 2 ] < rad * rad )
-									rad = 3;
+								{	rad = 3;
 									
 								//normalize vector length to the desired radius
 								final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1] + triangleVector[2]*triangleVector[2]) / rad;
@@ -341,7 +343,7 @@ public class MamutOverlay
 								//rotate the trajectory vector +60 and -60 in the Z axis, to produce the vectors emanating from triangleCenter and ending on the other two points of the triangle
 								final int[] x = new int[] {(int)(triangleCenter[0]+triangleVector[0]),(int)(triangleCenter[0]+triangleVector[0]*COSINE_60-triangleVector[1]*SINE_60),(int)(triangleCenter[0]+triangleVector[0]*COSINE_NEG60-triangleVector[1]*SINE_NEG60)};
 								final int[] y = new int[] {(int)(triangleCenter[1]+triangleVector[1]),(int)(triangleCenter[1]+triangleVector[0]*COSINE_60+triangleVector[1]*SINE_60),(int)(triangleCenter[1]+triangleVector[0]*COSINE_NEG60+triangleVector[1]*SINE_NEG60)};
-								g.drawPolygon(x,y,3);
+								g.drawPolygon(x,y,3);}
 							}
 						}
 					}

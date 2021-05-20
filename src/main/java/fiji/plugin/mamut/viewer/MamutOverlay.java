@@ -107,6 +107,15 @@ public class MamutOverlay
 		final boolean drawCellTriangles = ( Boolean ) !( (( Boolean ) viewer.displaySettings.get( KEY_SPOTS_VISIBLE )) && tracksVisible && trackDisplayDepth > 0 && trackDisplayMode == TrackMateModelView.TRACK_DISPLAY_MODE_WHOLE );
 		
 		/*
+		 * Compute scale
+		 */
+		final double vx = transform.get( 0, 0 );
+		final double vy = transform.get( 1, 0 );
+		final double vz = transform.get( 2, 0 );
+		final double transformScale = Math.sqrt( vx * vx + vy * vy + vz * vz );
+			
+			
+		/*
 		 * Draw spots.
 		 */
 
@@ -119,14 +128,6 @@ public class MamutOverlay
 			 */
 			g.setColor( Color.MAGENTA );
 			g.setFont( textFont );
-
-			/*
-			 * Compute scale
-			 */
-			final double vx = transform.get( 0, 0 );
-			final double vy = transform.get( 1, 0 );
-			final double vz = transform.get( 2, 0 );
-			final double transformScale = Math.sqrt( vx * vx + vy * vy + vz * vz );
 
 			final Iterable< Spot > spots;
 			final int frame = state.getCurrentTimepoint();

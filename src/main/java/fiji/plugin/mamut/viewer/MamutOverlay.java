@@ -339,8 +339,8 @@ public class MamutOverlay
 								g.setStroke( NORMAL_STROKE );
 								
 								//rotate the trajectory vector +60 and -60 in the Z axis, to produce the vectors emanating from triangleCenter and ending on the other two points of the triangle
-								final double[] x = new double[] {triangleCenter[0]+triangleVector[0],triangleCenter[0]+triangleVector[0]*COSINE_60-triangleVector[1]*SINE_60,triangleCenter[0]+triangleVector[0]*COSINE_NEG60-triangleVector[1]*SINE_NEG60};
-								final double[] y = new double[] {triangleCenter[1]+triangleVector[1],triangleCenter[1]+triangleVector[0]*COSINE_60+triangleVector[1]*SINE_60,triangleCenter[1]+triangleVector[0]*COSINE_NEG60+triangleVector[1]*SINE_NEG60};
+								final int[] x = new int[] {(int)triangleCenter[0]+triangleVector[0],(int)triangleCenter[0]+triangleVector[0]*COSINE_60-triangleVector[1]*SINE_60,(int)triangleCenter[0]+triangleVector[0]*COSINE_NEG60-triangleVector[1]*SINE_NEG60};
+								final int[] y = new int[] {(int)triangleCenter[1]+triangleVector[1],(int)triangleCenter[1]+triangleVector[0]*COSINE_60+triangleVector[1]*SINE_60,(int)triangleCenter[1]+triangleVector[0]*COSINE_NEG60+triangleVector[1]*SINE_NEG60};
 								g.drawPolygon(x,y,3);
 							}
 						}

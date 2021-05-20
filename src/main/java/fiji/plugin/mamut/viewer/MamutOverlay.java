@@ -261,22 +261,22 @@ public class MamutOverlay
 			case TrackMateModelView.TRACK_DISPLAY_MODE_WHOLE:
 			{
 				if ( drawCellTriangles )
-				{
-					double localBegin[] = new double[3];
-					double localEnd[] = new double[3]; 
-					double triangleVector[] = new double[3];
-					double triangleCenter[] = new double[3];
-					double spotRadius;
-					Color color = null;
-					
+				{			
 					for ( final Integer trackID : filteredTrackIDs )
 					{
+						final double localBegin[] = new double[3] {0,0,0};
+						final double localEnd[] = new double[3] {0,0,0}; 
+						final double triangleVector[] = new double[3] {0,0,0};
+						final double triangleCenter[] = new double[3] {0,0,0};
+						double spotRadius = 10; //default value to make sure it prints
+						Color color = null;
+					
 						viewer.trackColorProvider.setCurrentTrackID( trackID );
 						final Set< DefaultWeightedEdge > track = new HashSet<>( model.getTrackModel().trackEdges( trackID ) );
 						triangleCenter[] = {0,0,0};
 						localEnd[] = {0,0,0};
 						localBegin[] = {0,0,0};
-						spotRadius = 10; //default value to make sure it prints
+
 						color = null;
 
 						for ( final DefaultWeightedEdge edge : track )
@@ -292,7 +292,7 @@ public class MamutOverlay
 								final double[] globalCoords = new double[] { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) };
 								transform.apply( globalCoords, triangleCenter );
 								spotRadius = source.getFeature( Spot.RADIUS );
-								color = viewer.spotColorProvider.color( source )
+								color = viewer.spotColorProvider.color( source );
 							}
 							else if ( sourceFrame == minT )
 							{

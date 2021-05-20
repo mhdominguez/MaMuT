@@ -264,10 +264,10 @@ public class MamutOverlay
 				{			
 					for ( final Integer trackID : filteredTrackIDs )
 					{
-						final double[] localBegin = new double[3] {0,0,0};
-						final double[] localEnd = new double[3] {0,0,0}; 
-						final double[] triangleVector = new double[3] {0,0,0};
-						final double[] triangleCenter = new double[3] {0,0,0};
+						final double[] localBegin = new double[] {0,0,0};
+						final double[] localEnd = new double[] {0,0,0}; 
+						final double[] triangleVector = new double[] {0,0,0};
+						final double[] triangleCenter = new double[] {0,0,0};
 						double spotRadius = 10; //default value to make sure it prints
 						Color color = null;
 					

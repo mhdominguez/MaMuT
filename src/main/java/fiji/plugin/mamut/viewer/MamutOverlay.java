@@ -56,10 +56,10 @@ public class MamutOverlay
 
 	protected static final Stroke NORMAL_STROKE = new BasicStroke();
 	
-	protected static final float SINE_60 = (float) Math.sin(Math.toRadians(60))
-	protected static final float COSINE_60 = (float) Math.cos(Math.toRadians(60))
-	protected static final float SINE_NEG60 = (float) Math.sin(Math.toRadians(-60))
-	protected static final float COSINE_NEG60 = (float) Math.cos(Math.toRadians(-60))
+	protected static final float SINE_60 = (float) Math.sin(Math.toRadians(60));
+	protected static final float COSINE_60 = (float) Math.cos(Math.toRadians(60));
+	protected static final float SINE_NEG60 = (float) Math.sin(Math.toRadians(-60));
+	protected static final float COSINE_NEG60 = (float) Math.cos(Math.toRadians(-60));
 
 	/** The viewer state. */
 	protected ViewerState state;
@@ -273,9 +273,9 @@ public class MamutOverlay
 					{
 						viewer.trackColorProvider.setCurrentTrackID( trackID );
 						final Set< DefaultWeightedEdge > track = new HashSet<>( model.getTrackModel().trackEdges( trackID ) );
-						triangleCenter = {0,0,0};
-						localEnd = {0,0,0};
-						localBegin = {0,0,0};
+						triangleCenter[] = {0,0,0};
+						localEnd[] = {0,0,0};
+						localBegin[] = {0,0,0};
 						spotRadius = 10; //default value to make sure it prints
 						color = null;
 
@@ -289,20 +289,25 @@ public class MamutOverlay
 							{
 								//draw trangle center here -- already viewer-transformed
 								//triangleCenter = { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) };
-								transform.apply(  { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) }, triangleCenter );
+								final double[] globalCoords = new double[] { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) };
+								transform.apply( globalCoords, triangleCenter );
 								spotRadius = source.getFeature( Spot.RADIUS );
 								color = viewer.spotColorProvider.color( source )
 							}
 							else if ( sourceFrame == minT )
 							{
 								//set beginning of direction vector here -- already viewer-transformed
-								transform.apply(  { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) }, localBegin );
+								//transform.apply(  { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) }, localBegin );
+								final double[] globalCoords = new double[] { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) };
+								transform.apply( globalCoords, localBegin );
 								//localBegin = { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) };
 							}							
 							else if ( sourceFrame == maxT )
 							{
 								//set end of direction vector here -- already viewer-transformed
-								transform.apply(  { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) }, localEnd );
+								//transform.apply(  { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) }, localEnd );
+								final double[] globalCoords = new double[] { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) };
+								transform.apply( globalCoords, localEnd );								
 								//localEnd = { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) };
 							}
 							
@@ -338,7 +343,9 @@ public class MamutOverlay
 								g.setStroke( NORMAL_STROKE );
 								
 								//rotate the trajectory vector +60 and -60 in the Z axis, to produce the vectors emanating from triangleCenter and ending on the other two points of the triangle
-								g.DrawPolygon({triangleCenter[0]+triangleVector[0],triangleCenter[0]+triangleVector[0]*COSINE_60-triangleVector[1]*SINE_60,triangleCenter[0]+triangleVector[0]*COSINE_NEG60-triangleVector[1]*SINE_NEG60},{triangleCenter[1]+triangleVector[1],triangleCenter[1]+triangleVector[0]*COSINE_60+triangleVector[1]*SINE_60,triangleCenter[1]+triangleVector[0]*COSINE_NEG60+triangleVector[1]*SINE_NEG60},3);
+								final double[] x = new double[] {triangleCenter[0]+triangleVector[0],triangleCenter[0]+triangleVector[0]*COSINE_60-triangleVector[1]*SINE_60,triangleCenter[0]+triangleVector[0]*COSINE_NEG60-triangleVector[1]*SINE_NEG60};
+								final double[] y = new double[] {triangleCenter[1]+triangleVector[1],triangleCenter[1]+triangleVector[0]*COSINE_60+triangleVector[1]*SINE_60,triangleCenter[1]+triangleVector[0]*COSINE_NEG60+triangleVector[1]*SINE_NEG60};
+								g.DrawPolygon(x,y,3);
 							}
 						}
 					}

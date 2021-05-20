@@ -353,7 +353,7 @@ public class MamutOverlay
 				g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
 				if ( drawCellTriangles )
 				{
-					final int local_deltaT = Math.int(trackDisplayDepth/5) + 1;
+					final int local_deltaT = Math.floor(trackDisplayDepth/5) + 1;
 					final int local_minT = currentFrame - local_deltaT;
 					final int local_maxT = currentFrame + local_deltaT;	
 					for ( final Integer trackID : filteredTrackIDs )

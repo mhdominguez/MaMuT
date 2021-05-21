@@ -441,15 +441,15 @@ public class MamutOverlay
 							}*/
 							final double arad = Math.sqrt( rad - dz2 );
 							//g.drawOval( ( int ) ( viewerCoords[ 0 ] - arad ), ( int ) ( viewerCoords[ 1 ] - arad ), ( int ) ( 2 * arad ), ( int ) ( 2 * arad ) );	
-					/*		
-				if ( dz2 < rad * rad )
+							
+				if ( dz2 < rad )
 				{
 					g.drawOval( ( int ) ( triangleCenter[ 0 ] - arad ), ( int ) ( triangleCenter[ 1 ] - arad ), ( int ) ( 2 * arad ), ( int ) ( 2 * arad ) );
 				}
 				else
 				{
 					g.fillOval( ( int ) triangleCenter[ 0 ] - 2, ( int ) triangleCenter[ 1 ] - 2, 4, 4 );
-				}*/
+				}
 								
 							//normalize vector length to the desired radius
 							final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1] + triangleVector[2]*triangleVector[2]) / arad;

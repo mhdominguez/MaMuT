@@ -439,9 +439,9 @@ public class MamutOverlay
 							{
 								arad = 2;
 							}*/
-							final double arad = Math.sqrt( rad - dz2 );
+							final double arad = 8 + Math.sqrt( rad - dz2 )/2;
 							//g.drawOval( ( int ) ( viewerCoords[ 0 ] - arad ), ( int ) ( viewerCoords[ 1 ] - arad ), ( int ) ( 2 * arad ), ( int ) ( 2 * arad ) );	
-							
+				/*
 				if ( dz2 < rad )
 				{
 					g.drawOval( ( int ) ( triangleCenter[ 0 ] - arad ), ( int ) ( triangleCenter[ 1 ] - arad ), ( int ) ( 2 * arad ), ( int ) ( 2 * arad ) );
@@ -450,7 +450,7 @@ public class MamutOverlay
 				{
 					g.fillOval( ( int ) triangleCenter[ 0 ] - 2, ( int ) triangleCenter[ 1 ] - 2, 4, 4 );
 				}
-								
+				*/				
 							//normalize vector length to the desired radius
 							final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1] + triangleVector[2]*triangleVector[2]) / arad;
 							//final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1]) / arad;
@@ -462,6 +462,7 @@ public class MamutOverlay
 							final int[] x = new int[] {(int)(triangleCenter[0]+triangleVector[0]),(int)(triangleCenter[0]+triangleVector[0]*COSINE_120-triangleVector[1]*SINE_120),(int)(triangleCenter[0]+triangleVector[0]*COSINE_NEG120-triangleVector[1]*SINE_NEG120)};
 							final int[] y = new int[] {(int)(triangleCenter[1]+triangleVector[1]),(int)(triangleCenter[1]+triangleVector[0]*COSINE_120+triangleVector[1]*SINE_120),(int)(triangleCenter[1]+triangleVector[0]*COSINE_NEG120+triangleVector[1]*SINE_NEG120)};
 							g.setStroke( HALF_SELECTION_STROKE );
+							g.setComposite( originalComposite );
 							g.drawPolygon(x,y,3);
 						}
 					}

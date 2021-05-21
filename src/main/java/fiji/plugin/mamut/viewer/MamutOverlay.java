@@ -373,10 +373,6 @@ public class MamutOverlay
 						{
 							source = model.getTrackModel().getEdgeSource( edge );
 							sourceFrame = source.getFeature( Spot.FRAME ).intValue();
-							
-							if ( sourceFrame < minT || sourceFrame >= maxT )
-								continue;
-							
 							target = model.getTrackModel().getEdgeTarget( edge );
 							
 							if ( sourceFrame == currentFrame )
@@ -406,11 +402,13 @@ public class MamutOverlay
 							}
 							
 							//now, draw track edges
-							
-							transparency = ( float ) ( 1 - Math.abs( sourceFrame - currentFrame ) / trackDisplayDepth );
-							g.setColor( viewer.trackColorProvider.color( edge ) );
-							//drawEdge( g, source, target, transform, 1f, doLimitDrawingDepth, drawingDepth );
-							drawEdge( g, source, target, transform, transparency, doLimitDrawingDepth, drawingDepth );
+							if ( sourceFrame >= minT && sourceFrame < maxT )
+							{
+								transparency = ( float ) ( 1 - Math.abs( sourceFrame - currentFrame ) / trackDisplayDepth );
+								g.setColor( viewer.trackColorProvider.color( edge ) );
+								//drawEdge( g, source, target, transform, 1f, doLimitDrawingDepth, drawingDepth );
+								drawEdge( g, source, target, transform, transparency, doLimitDrawingDepth, drawingDepth );
+							}
 						}
 						
 						//now, draw triangle as established above

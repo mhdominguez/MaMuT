@@ -414,6 +414,8 @@ public class MamutOverlay
 						//now, draw triangle as established above
 						if ( drawTriangle && ( forceDraw || Math.abs( triangleCenter[2] ) <= drawingDepth ) )
 						{
+							g.setColor( color );
+						
 							//final double dz2 = triangleCenter[ 2 ] * triangleCenter[ 2 ];
 							final double rad = Math.pow(spotRadius * transformScale * radiusRatio,2);
 							final double zv = triangleCenter[ 2 ];
@@ -436,7 +438,17 @@ public class MamutOverlay
 								arad = 2;
 							}*/
 							final double arad = Math.sqrt( rad - dz2 );
-							//g.drawOval( ( int ) ( viewerCoords[ 0 ] - arad ), ( int ) ( viewerCoords[ 1 ] - arad ), ( int ) ( 2 * arad ), ( int ) ( 2 * arad ) );								
+							//g.drawOval( ( int ) ( viewerCoords[ 0 ] - arad ), ( int ) ( viewerCoords[ 1 ] - arad ), ( int ) ( 2 * arad ), ( int ) ( 2 * arad ) );	
+							
+				if ( dz2 < rad * rad )
+				{
+					g.drawOval( ( int ) ( triangleCenter[ 0 ] - arad ), ( int ) ( triangleCenter[ 1 ] - arad ), ( int ) ( 2 * arad ), ( int ) ( 2 * arad ) );
+				}
+				else
+				{
+					g.fillOval( ( int ) triangleCenter[ 0 ] - 2, ( int ) triangleCenter[ 1 ] - 2, 4, 4 );
+				}
+				break;
 								
 							//normalize vector length to the desired radius
 							final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1] + triangleVector[2]*triangleVector[2]) / arad;
@@ -444,10 +456,7 @@ public class MamutOverlay
 							triangleVector[0] /= vecNormalize;
 							triangleVector[1] /= vecNormalize;
 							triangleVector[2] /= vecNormalize; //Z coordinate actually doesn't need to get normalized
-							
-							//set up drawing parameters
-							g.setColor( color );
-								
+
 							//rotate the trajectory vector +120 and -120 in the Z axis, to produce the vectors emanating from triangleCenter and ending on the other two points of the triangle
 							final int[] x = new int[] {(int)(triangleCenter[0]+triangleVector[0]),(int)(triangleCenter[0]+triangleVector[0]*COSINE_120-triangleVector[1]*SINE_120),(int)(triangleCenter[0]+triangleVector[0]*COSINE_NEG120-triangleVector[1]*SINE_NEG120)};
 							final int[] y = new int[] {(int)(triangleCenter[1]+triangleVector[1]),(int)(triangleCenter[1]+triangleVector[0]*COSINE_120+triangleVector[1]*SINE_120),(int)(triangleCenter[1]+triangleVector[0]*COSINE_NEG120+triangleVector[1]*SINE_NEG120)};

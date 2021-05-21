@@ -57,10 +57,10 @@ public class MamutOverlay
 
 	protected static final Stroke NORMAL_STROKE = new BasicStroke();
 	
-	protected static final float SINE_60 = (float) Math.sin(Math.toRadians(60));
-	protected static final float COSINE_60 = (float) Math.cos(Math.toRadians(60));
-	protected static final float SINE_NEG60 = (float) Math.sin(Math.toRadians(-60));
-	protected static final float COSINE_NEG60 = (float) Math.cos(Math.toRadians(-60));
+	protected static final float SINE_60 = (float) Math.sin(Math.toRadians(120));
+	protected static final float COSINE_60 = (float) Math.cos(Math.toRadians(120));
+	protected static final float SINE_NEG60 = (float) Math.sin(Math.toRadians(-120));
+	protected static final float COSINE_NEG60 = (float) Math.cos(Math.toRadians(-120));
 
 	/** The viewer state. */
 	protected ViewerState state;
@@ -408,19 +408,25 @@ public class MamutOverlay
 							triangleVector[1] = localEnd[1] - triangleCenter[1];
 							triangleVector[2] = localEnd[2] - triangleCenter[2];
 							
+							
 							//are we in view or not; if not, shrink radius considerably
-							//if ( dz2 > rad )
-							//	rad = 4;
-								
-							double arad = Math.sqrt( rad - dz2 ) / 2;
-							if ( arad < 4 )
-								arad = 4;
-													
+							final double arad;
+							if ( dz2 < rad )
+							{	
+								arad = Math.sqrt( rad - dz2 ); // * 5;
+							}
+							else
+							{
+								arad = 2;
+							}
 							//g.drawOval( ( int ) ( viewerCoords[ 0 ] - arad ), ( int ) ( viewerCoords[ 1 ] - arad ), ( int ) ( 2 * arad ), ( int ) ( 2 * arad ) );								
 								
 							//normalize vector length to the desired radius
-							final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1] + triangleVector[2]*triangleVector[2]) / arad;
-							triangleVector[0] /= vecNormalize; triangleVector[1] /= vecNormalize; triangleVector[2] /= vecNormalize; //Z coordinate actually doesn't need to get normalized
+							//final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1] + triangleVector[2]*triangleVector[2]) / arad;
+							final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1]) / arad;
+							triangleVector[0] /= vecNormalize;
+							triangleVector[1] /= vecNormalize;
+							triangleVector[2] /= vecNormalize; //Z coordinate actually doesn't need to get normalized
 							
 							//set up drawing parameters
 							if ( null == viewer.spotColorProvider || null == color )

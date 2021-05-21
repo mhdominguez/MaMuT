@@ -57,10 +57,10 @@ public class MamutOverlay
 
 	protected static final Stroke NORMAL_STROKE = new BasicStroke();
 	
-	protected static final float SINE_60 = (float) Math.sin(Math.toRadians(120));
-	protected static final float COSINE_60 = (float) Math.cos(Math.toRadians(120));
-	protected static final float SINE_NEG60 = (float) Math.sin(Math.toRadians(-120));
-	protected static final float COSINE_NEG60 = (float) Math.cos(Math.toRadians(-120));
+	protected static final float SINE_120 = (float) Math.sin(Math.toRadians(120));
+	protected static final float COSINE_120 = (float) Math.cos(Math.toRadians(120));
+	protected static final float SINE_NEG120 = (float) Math.sin(Math.toRadians(-120));
+	protected static final float COSINE_NEG120 = (float) Math.cos(Math.toRadians(-120));
 
 	/** The viewer state. */
 	protected ViewerState state;
@@ -410,7 +410,7 @@ public class MamutOverlay
 							
 							
 							//are we in view or not; if not, shrink radius considerably
-							final double arad;
+							/*final double arad;
 							if ( dz2 < rad )
 							{	
 								arad = Math.sqrt( rad - dz2 ); // * 5;
@@ -418,12 +418,13 @@ public class MamutOverlay
 							else
 							{
 								arad = 2;
-							}
+							}*/
+							final double arad = 10 + Math.sqrt( rad - dz2 ) / 2;
 							//g.drawOval( ( int ) ( viewerCoords[ 0 ] - arad ), ( int ) ( viewerCoords[ 1 ] - arad ), ( int ) ( 2 * arad ), ( int ) ( 2 * arad ) );								
 								
 							//normalize vector length to the desired radius
-							//final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1] + triangleVector[2]*triangleVector[2]) / arad;
-							final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1]) / arad;
+							final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1] + triangleVector[2]*triangleVector[2]) / arad;
+							//final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1]) / arad;
 							triangleVector[0] /= vecNormalize;
 							triangleVector[1] /= vecNormalize;
 							triangleVector[2] /= vecNormalize; //Z coordinate actually doesn't need to get normalized
@@ -433,9 +434,9 @@ public class MamutOverlay
 								color = TrackMateModelView.DEFAULT_SPOT_COLOR;
 							g.setColor( color );
 								
-							//rotate the trajectory vector +60 and -60 in the Z axis, to produce the vectors emanating from triangleCenter and ending on the other two points of the triangle
-							final int[] x = new int[] {(int)(triangleCenter[0]+triangleVector[0]),(int)(triangleCenter[0]+triangleVector[0]*COSINE_60-triangleVector[1]*SINE_60),(int)(triangleCenter[0]+triangleVector[0]*COSINE_NEG60-triangleVector[1]*SINE_NEG60)};
-							final int[] y = new int[] {(int)(triangleCenter[1]+triangleVector[1]),(int)(triangleCenter[1]+triangleVector[0]*COSINE_60+triangleVector[1]*SINE_60),(int)(triangleCenter[1]+triangleVector[0]*COSINE_NEG60+triangleVector[1]*SINE_NEG60)};
+							//rotate the trajectory vector +120 and -120 in the Z axis, to produce the vectors emanating from triangleCenter and ending on the other two points of the triangle
+							final int[] x = new int[] {(int)(triangleCenter[0]+triangleVector[0]),(int)(triangleCenter[0]+triangleVector[0]*COSINE_120-triangleVector[1]*SINE_120),(int)(triangleCenter[0]+triangleVector[0]*COSINE_NEG120-triangleVector[1]*SINE_NEG120)};
+							final int[] y = new int[] {(int)(triangleCenter[1]+triangleVector[1]),(int)(triangleCenter[1]+triangleVector[0]*COSINE_120+triangleVector[1]*SINE_120),(int)(triangleCenter[1]+triangleVector[0]*COSINE_NEG120+triangleVector[1]*SINE_NEG120)};
 							g.setStroke( HALF_SELECTION_STROKE );
 							g.drawPolygon(x,y,3);
 						}

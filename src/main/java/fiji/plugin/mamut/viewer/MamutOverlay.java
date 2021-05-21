@@ -373,8 +373,7 @@ public class MamutOverlay
 							source = model.getTrackModel().getEdgeSource( edge );
 							sourceFrame = source.getFeature( Spot.FRAME ).intValue();
 		
-							if ( sourceFrame < minT || sourceFrame >= maxT )
-								continue;
+
 							
 							target = model.getTrackModel().getEdgeTarget( edge );
 							
@@ -404,6 +403,9 @@ public class MamutOverlay
 								}								
 							}
 							
+							if ( sourceFrame < minT || sourceFrame >= maxT )
+								continue;
+								
 							//now, draw track edges
 							transparency = ( float ) ( 1 - Math.abs( sourceFrame - currentFrame ) / trackDisplayDepth );
 							g.setColor( viewer.trackColorProvider.color( edge ) );
@@ -439,7 +441,7 @@ public class MamutOverlay
 							}*/
 							final double arad = Math.sqrt( rad - dz2 );
 							//g.drawOval( ( int ) ( viewerCoords[ 0 ] - arad ), ( int ) ( viewerCoords[ 1 ] - arad ), ( int ) ( 2 * arad ), ( int ) ( 2 * arad ) );	
-							
+					/*		
 				if ( dz2 < rad * rad )
 				{
 					g.drawOval( ( int ) ( triangleCenter[ 0 ] - arad ), ( int ) ( triangleCenter[ 1 ] - arad ), ( int ) ( 2 * arad ), ( int ) ( 2 * arad ) );
@@ -447,8 +449,8 @@ public class MamutOverlay
 				else
 				{
 					g.fillOval( ( int ) triangleCenter[ 0 ] - 2, ( int ) triangleCenter[ 1 ] - 2, 4, 4 );
-				}
-				/*				
+				}*/
+								
 							//normalize vector length to the desired radius
 							final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1] + triangleVector[2]*triangleVector[2]) / arad;
 							//final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1]) / arad;
@@ -460,7 +462,7 @@ public class MamutOverlay
 							final int[] x = new int[] {(int)(triangleCenter[0]+triangleVector[0]),(int)(triangleCenter[0]+triangleVector[0]*COSINE_120-triangleVector[1]*SINE_120),(int)(triangleCenter[0]+triangleVector[0]*COSINE_NEG120-triangleVector[1]*SINE_NEG120)};
 							final int[] y = new int[] {(int)(triangleCenter[1]+triangleVector[1]),(int)(triangleCenter[1]+triangleVector[0]*COSINE_120+triangleVector[1]*SINE_120),(int)(triangleCenter[1]+triangleVector[0]*COSINE_NEG120+triangleVector[1]*SINE_NEG120)};
 							g.setStroke( HALF_SELECTION_STROKE );
-							g.drawPolygon(x,y,3);*/
+							g.drawPolygon(x,y,3);
 						}
 					}
 					break; //no need for else since we break out of switch statement here

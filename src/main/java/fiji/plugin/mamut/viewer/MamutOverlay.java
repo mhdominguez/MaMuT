@@ -361,7 +361,7 @@ public class MamutOverlay
 						
 						double spotRadius = 10; //default value to make sure it prints
 						Color color = null;
-						boolean drawTriangle;
+						boolean drawTriangle = false;
 						
 						viewer.trackColorProvider.setCurrentTrackID( trackID );
 						final Set< DefaultWeightedEdge > track = new HashSet<>( model.getTrackModel().trackEdges( trackID ) );

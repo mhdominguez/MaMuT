@@ -371,9 +371,7 @@ public class MamutOverlay
 						{
 							source = model.getTrackModel().getEdgeSource( edge );
 							sourceFrame = source.getFeature( Spot.FRAME ).intValue();
-
-							drawTriangle = false;
-							
+		
 							if ( sourceFrame < minT || sourceFrame >= maxT )
 								continue;
 							

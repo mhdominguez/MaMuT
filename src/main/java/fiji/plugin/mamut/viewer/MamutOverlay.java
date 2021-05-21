@@ -417,7 +417,8 @@ public class MamutOverlay
 						if ( drawTriangle && ( forceDraw || Math.abs( triangleCenter[2] ) <= drawingDepth ) )
 						{
 							g.setColor( color );
-						
+							g.setComposite( originalComposite );
+							
 							//final double dz2 = triangleCenter[ 2 ] * triangleCenter[ 2 ];
 							final double rad = Math.pow(spotRadius * transformScale * radiusRatio,2);
 							final double zv = triangleCenter[ 2 ];
@@ -462,7 +463,7 @@ public class MamutOverlay
 							final int[] x = new int[] {(int)(triangleCenter[0]+triangleVector[0]),(int)(triangleCenter[0]+triangleVector[0]*COSINE_120-triangleVector[1]*SINE_120),(int)(triangleCenter[0]+triangleVector[0]*COSINE_NEG120-triangleVector[1]*SINE_NEG120)};
 							final int[] y = new int[] {(int)(triangleCenter[1]+triangleVector[1]),(int)(triangleCenter[1]+triangleVector[0]*COSINE_120+triangleVector[1]*SINE_120),(int)(triangleCenter[1]+triangleVector[0]*COSINE_NEG120+triangleVector[1]*SINE_NEG120)};
 							g.setStroke( HALF_SELECTION_STROKE );
-							g.setComposite( originalComposite );
+							
 							g.drawPolygon(x,y,3);
 						}
 					}

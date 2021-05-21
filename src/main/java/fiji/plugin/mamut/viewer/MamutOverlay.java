@@ -399,7 +399,7 @@ public class MamutOverlay
 						if ( drawTriangle && ( !(doLimitDrawingDepth) || Math.abs( triangleCenter[2] ) < drawingDepth ) )
 						{
 							//final double dz2 = triangleCenter[ 2 ] * triangleCenter[ 2 ];
-							final double rad = (spotRadius * transformScale * radiusRatio) ** 2;
+							final double rad = Math.pow(spotRadius * transformScale * radiusRatio,2);
 							final double zv = triangleCenter[ 2 ];
 							final double dz2 = zv * zv;	
 							

@@ -353,13 +353,10 @@ public class MamutOverlay
 				g.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
 				if ( drawCellTriangles )
 				{
-					final int local_deltaT = ( int )(Math.floor(trackDisplayDepth/5) + 1);
-					final int local_minT = currentFrame - local_deltaT;
-					final int local_maxT = currentFrame + local_deltaT;	
 					for ( final Integer trackID : filteredTrackIDs )
 					{
-						//final double[] localBegin = new double[] {0,0,0};
-						//final double[] localEnd = new double[] {0,0,0}; 
+						final double[] triangleCenter = new double[] {0,0,0};
+						final double[] localEnd = new double[] {0,0,0};
 						final double[] triangleVector = new double[] {0,0,0};
 						
 						double spotRadius = 10; //default value to make sure it prints
@@ -374,8 +371,7 @@ public class MamutOverlay
 						{
 							source = model.getTrackModel().getEdgeSource( edge );
 							sourceFrame = source.getFeature( Spot.FRAME ).intValue();
-							final double[] triangleCenter = new double[] {0,0,0};
-							final double[] localEnd = new double[] {0,0,0};
+
 							drawTriangle = false;
 							
 							if ( sourceFrame < minT || sourceFrame >= maxT )
@@ -385,8 +381,7 @@ public class MamutOverlay
 							
 							if ( sourceFrame == currentFrame )
 							{
-								//draw trangle center here -- already viewer-transformed
-								//triangleCenter = { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) };
+								//draw trangle center here
 								double[] globalCoords = new double[] { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) };
 								transform.apply( globalCoords, triangleCenter );
 								spotRadius = source.getFeature( Spot.RADIUS );
@@ -394,26 +389,9 @@ public class MamutOverlay
 								globalCoords = new double[] { target.getFeature( Spot.POSITION_X ), target.getFeature( Spot.POSITION_Y ), target.getFeature( Spot.POSITION_Z ) };
 								transform.apply( globalCoords, localEnd );
 								drawTriangle = true;
-							}/*
-							else if ( sourceFrame == local_minT )
-							{
-								//set beginning of direction vector here -- already viewer-transformed
-								//transform.apply(  { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) }, localBegin );
-								final double[] globalCoords = new double[] { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) };
-								transform.apply( globalCoords, localBegin );
-								//localBegin = { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) };
-							}							
-							else if ( sourceFrame == local_maxT )
-							{
-								//set end of direction vector here -- already viewer-transformed
-								//transform.apply(  { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) }, localEnd );
-								final double[] globalCoords = new double[] { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) };
-								transform.apply( globalCoords, localEnd );								
-								//localEnd = { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) };
-							}*/
+							}
 							
 							//now, draw track edges
-							
 							transparency = ( float ) ( 1 - Math.abs( sourceFrame - currentFrame ) / trackDisplayDepth );
 							g.setColor( viewer.trackColorProvider.color( edge ) );
 							//drawEdge( g, source, target, transform, 1f, doLimitDrawingDepth, drawingDepth );

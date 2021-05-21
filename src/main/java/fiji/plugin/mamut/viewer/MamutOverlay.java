@@ -360,7 +360,7 @@ public class MamutOverlay
 					{
 						//final double[] localBegin = new double[] {0,0,0};
 						//final double[] localEnd = new double[] {0,0,0}; 
-						//final double[] triangleVector = new double[] {0,0,0};
+						final double[] triangleVector = new double[] {0,0,0};
 						
 						double spotRadius = 10; //default value to make sure it prints
 						Color color = null;
@@ -427,7 +427,9 @@ public class MamutOverlay
 							double rad = spotRadius * transformScale * radiusRatio;
 								
 							//determine rise/run for the local track
-							triangleVector[0] = localEnd[0] - localBegin[0]; triangleVector[1] = localEnd[1] - localBegin[1]; triangleVector[2] = localEnd[2] - localBegin[2];
+							triangleVector[0] = localEnd[0] - triangleCenter[0];
+							triangleVector[1] = localEnd[1] - triangleCenter[1];
+							triangleVector[2] = localEnd[2] - triangleCenter[2];
 							
 							//are we in view or not; if not, shrink radius considerably
 							if ( triangleCenter[ 2 ] * triangleCenter[ 2 ] > rad * rad )

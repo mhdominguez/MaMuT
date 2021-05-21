@@ -106,6 +106,7 @@ public class MamutOverlay
 		final boolean tracksVisible = ( Boolean ) viewer.displaySettings.get( TrackMateModelView.KEY_TRACKS_VISIBLE );
 		final double radiusRatio = ( Double ) viewer.displaySettings.get( KEY_SPOT_RADIUS_RATIO );
 		final boolean drawCellTriangles = ( Boolean ) ( (( Boolean ) viewer.displaySettings.get( KEY_SPOTS_VISIBLE )) && tracksVisible && trackDisplayDepth > 0 && trackDisplayDepth < 1_000_000_000 && trackDisplayMode == TrackMateModelView.TRACK_DISPLAY_MODE_LOCAL );
+		final boolean doDisplayNames = ( Boolean ) viewer.displaySettings.get( KEY_DISPLAY_SPOT_NAMES );
 		
 		/*
 		 * Compute scale
@@ -122,8 +123,6 @@ public class MamutOverlay
 
 		if ( (( Boolean ) viewer.displaySettings.get( KEY_SPOTS_VISIBLE )) && !(drawCellTriangles) ) //don't draw spots if we are drawing triangles instead
 		{
-			final boolean doDisplayNames = ( Boolean ) viewer.displaySettings.get( KEY_DISPLAY_SPOT_NAMES );
-
 			/*
 			 * Setup painter object
 			 */
@@ -400,19 +399,27 @@ public class MamutOverlay
 						if ( drawTriangle && ( !(doLimitDrawingDepth) || Math.abs( triangleCenter[2] ) < drawingDepth ) )
 						{
 							//final double dz2 = triangleCenter[ 2 ] * triangleCenter[ 2 ];
-							double rad = spotRadius * transformScale * radiusRatio;
-								
+							final double rad = (spotRadius * transformScale * radiusRatio) ** 2;
+							final double zv = triangleCenter[ 2 ];
+							final double dz2 = zv * zv;	
+							
 							//determine rise/run for the local track
 							triangleVector[0] = localEnd[0] - triangleCenter[0];
 							triangleVector[1] = localEnd[1] - triangleCenter[1];
 							triangleVector[2] = localEnd[2] - triangleCenter[2];
 							
 							//are we in view or not; if not, shrink radius considerably
-							if ( triangleCenter[ 2 ] * triangleCenter[ 2 ] > rad * rad )
-								rad = 4;
+							//if ( dz2 > rad )
+							//	rad = 4;
+								
+							double arad = Math.sqrt( rad - dz2 ) / 2;
+							if ( arad < 4 )
+								arad = 4;
+													
+							//g.drawOval( ( int ) ( viewerCoords[ 0 ] - arad ), ( int ) ( viewerCoords[ 1 ] - arad ), ( int ) ( 2 * arad ), ( int ) ( 2 * arad ) );								
 								
 							//normalize vector length to the desired radius
-							final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1] + triangleVector[2]*triangleVector[2]) / rad;
+							final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1] + triangleVector[2]*triangleVector[2]) / arad;
 							triangleVector[0] /= vecNormalize; triangleVector[1] /= vecNormalize; triangleVector[2] /= vecNormalize; //Z coordinate actually doesn't need to get normalized
 							
 							//set up drawing parameters

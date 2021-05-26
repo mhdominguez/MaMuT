@@ -359,10 +359,8 @@ public class MamutOverlay
 						final double[] triangleVector = new double[] {0,0,0};
 						boolean drawTriangle = false;
 						boolean forceDraw = !doLimitDrawingDepth;
-						
 						double spotRadius = 10; //default value to make sure it prints
 						Color color = null;
-						
 						
 						viewer.trackColorProvider.setCurrentTrackID( trackID );
 						final Set< DefaultWeightedEdge > track = new HashSet<>( model.getTrackModel().trackEdges( trackID ) );
@@ -372,12 +370,9 @@ public class MamutOverlay
 						{
 							source = model.getTrackModel().getEdgeSource( edge );
 							sourceFrame = source.getFeature( Spot.FRAME ).intValue();
-		
-
-							
 							target = model.getTrackModel().getEdgeTarget( edge );
 							
-							if ( sourceFrame == currentFrame )
+							if ( sourceFrame == currentFrame || target.getFeature( Spot.FRAME ).intValue() -1 == currentFrame )
 							{
 								//draw trangle center here
 								double[] globalCoords = new double[] { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) };

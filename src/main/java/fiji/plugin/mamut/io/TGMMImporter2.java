@@ -245,7 +245,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 				
 				for ( int ii = 0; ii < timepoints.size(); ii++ )
 				{
-					if ( timepoints[ii].getId() == frames[ t ] )
+					if ( timepoints.get( ii ).getId() == frames[ t ] )
 					{
 						transform = transforms.get( ii );
 						transformNotFound = false;

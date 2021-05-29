@@ -432,12 +432,13 @@ public class ImportTGMMAnnotationPlugin_ implements PlugIn
 		final SequenceDescriptionMinimal seq = spimData.getSequenceDescription();
 		final ViewRegistrations regs = spimData.getViewRegistrations();
 		final List< AffineTransform3D > transforms = new ArrayList<>( seq.getTimePoints().size() );
-		for ( final TimePoint t : seq.getTimePoints().getTimePointsOrdered() )
+		final List< Timepoint > timepoints = seq.getTimePoints().getTimePointsOrdered();
+		for ( final TimePoint t : timepoints )
 		{
 			transforms.add( regs.getViewRegistration( t.getId(), setupID ).getModel() );
 		}
 
-		final TGMMImporter2 importer = new TGMMImporter2( tgmmFolder, transforms, TGMMImporter2.DEFAULT_PATTERN, logger, interval, tFrom, tTo, doBreakDiv );
+		final TGMMImporter2 importer = new TGMMImporter2( tgmmFolder, transforms, timepoints, TGMMImporter2.DEFAULT_PATTERN, logger, interval, tFrom, tTo, doBreakDiv );
 		if ( !importer.checkInput() || !importer.process() )
 		{
 			logger.error( importer.getErrorMessage() );

@@ -46,6 +46,7 @@ import fiji.plugin.trackmate.Logger;
 import fiji.plugin.trackmate.Model;
 import fiji.plugin.trackmate.Spot;
 import fiji.plugin.trackmate.SpotCollection;
+import mpicbg.spim.data.sequence.TimePoint;
 import net.imglib2.RealInterval;
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPoint;
@@ -114,7 +115,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 	 * CONSTRUCTORS
 	 */
 
-	public TGMMImporter2( final File file, final List< AffineTransform3D > transforms, final Pattern framePattern, final Logger logger, final RealInterval interval, final int tFrom, final int tTo, final int doBreakDiv )
+	public TGMMImporter2( final File file, final List< AffineTransform3D > transforms, final List< Timepoint > timepoints, final Pattern framePattern, final Logger logger, final RealInterval interval, final int tFrom, final int tTo, final int doBreakDiv )
 	{
 		this.file = file;
 		this.framePattern = framePattern;
@@ -226,6 +227,8 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 
 			Map< Integer, Spot > previousSpotID = null;
 			Map< Integer, Spot > currentSpotID;
+			AffineTransform3D transform = transforms.get( 0 );
+			boolean transformFound;
 
 			for ( int t = 0; t < frames.length; t++ )
 			{
@@ -235,7 +238,23 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 				}
 
 				logger.log( "Processing frame " + frames[ t ] + ". " );
-				final AffineTransform3D transform = transforms.get( frames[ t ] );
+				transformNotFound = true;
+				
+				for ( int ii = 0; ii < timepoints.size(); ii++ )
+				{
+					if ( timepoints[ii].getId() == frames[ t ] )
+					{
+						transform = transforms.get( ii );
+						transformNotFound = false;
+						break;
+					}
+				}
+				
+				if ( transformNotFound )
+				{
+					logger.log( "Unable to find AffineTransform3D for frame " + frames[ t ] + "; using most recently recalled transformation model!" );
+				}
+				
 
 				xmlFile = xmlFiles[ t ];
 				final Document doc = saxBuilder.build( xmlFile );

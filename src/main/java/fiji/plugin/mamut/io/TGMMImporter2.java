@@ -99,7 +99,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 
 	private final List< AffineTransform3D > transforms;
 	
-	private final List< Timepoint > timepoints;
+	private final List< TimePoint > timepoints;
 
 	private final Logger logger;
 
@@ -117,7 +117,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 	 * CONSTRUCTORS
 	 */
 
-	public TGMMImporter2( final File file, final List< AffineTransform3D > transforms, final List< Timepoint > timepoints, final Pattern framePattern, final Logger logger, final RealInterval interval, final int tFrom, final int tTo, final int doBreakDiv )
+	public TGMMImporter2( final File file, final List< AffineTransform3D > transforms, final List< TimePoint > timepoints, final Pattern framePattern, final Logger logger, final RealInterval interval, final int tFrom, final int tTo, final int doBreakDiv )
 	{
 		this.file = file;
 		this.framePattern = framePattern;

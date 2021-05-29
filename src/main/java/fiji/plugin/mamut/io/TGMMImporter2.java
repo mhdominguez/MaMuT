@@ -231,7 +231,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 			Map< Integer, Spot > previousSpotID = null;
 			Map< Integer, Spot > currentSpotID;
 			AffineTransform3D transform = transforms.get( 0 );
-			boolean transformFound;
+			boolean transformNotFound;
 
 			for ( int t = 0; t < frames.length; t++ )
 			{

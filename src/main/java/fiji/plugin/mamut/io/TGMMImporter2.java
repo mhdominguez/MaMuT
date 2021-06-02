@@ -231,7 +231,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 			Map< Integer, Spot > previousSpotID = null;
 			Map< Integer, Spot > currentSpotID;
 			AffineTransform3D transform = transforms.get( 0 );
-			boolean transformNotFound;
+			int timepointIndex;
 
 			for ( int t = 0; t < frames.length; t++ )
 			{
@@ -241,19 +241,19 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 				}
 
 				logger.log( "Processing frame " + frames[ t ] + ". " );
-				transformNotFound = true;
+				timepointIndex = -1;
 				
 				for ( int ii = 0; ii < timepoints.size(); ii++ )
 				{
 					if ( timepoints.get( ii ).getId() == frames[ t ] )
 					{
 						transform = transforms.get( ii );
-						transformNotFound = false;
+						timepointIndex = ii;
 						break;
 					}
 				}
 				
-				if ( transformNotFound )
+				if ( timepointIndex < 0 )
 				{
 					logger.log( "Unable to find AffineTransform3D for frame " + frames[ t ] + "; using most recently recalled transformation model!" );
 				}
@@ -457,7 +457,7 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 				 * Finished inspecting a frame. Store it in the spot collection.
 				 */
 
-				sc.put( frames[ t ], spots );
+				sc.put( timepointIndex, spots );
 				previousSpotID = currentSpotID;
 				logger.log( "Found " + spots.size() + " spots.\n" );
 				logger.setProgress( ( double ) t / frames.length );

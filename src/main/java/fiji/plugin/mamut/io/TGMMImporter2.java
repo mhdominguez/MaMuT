@@ -255,9 +255,9 @@ public class TGMMImporter2 implements OutputAlgorithm< Model >, Benchmark
 				
 				if ( timepointIndex < 0 )
 				{
-					logger.log( "Unable to find AffineTransform3D for frame " + frames[ t ] + "; using most recently recalled transformation model!" );
+					errorMessage = BASE_ERROR_MSG + "Unable to find frame " + frames[ t ] + " in " + xmlFile + ".\n";
+					return false;
 				}
-				
 
 				xmlFile = xmlFiles[ t ];
 				final Document doc = saxBuilder.build( xmlFile );

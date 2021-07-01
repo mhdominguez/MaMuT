@@ -35,9 +35,9 @@ import ij3d.ContentNode;
 public class SpotGroupNode< K > extends ContentNode
 {
 
-	private static final int DEFAULT_MERIDIAN_NUMBER = 6;
+	private static final int DEFAULT_MERIDIAN_NUMBER = 3;
 
-	private static final int DEFAULT_PARALLEL_NUMBER = 6;
+	private static final int DEFAULT_PARALLEL_NUMBER = 3;
 
 	/**
 	 * The font size

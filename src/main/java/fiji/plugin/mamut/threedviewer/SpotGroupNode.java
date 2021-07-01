@@ -408,9 +408,9 @@ public class SpotGroupNode< K > extends ContentNode
 		
 		if ( useIcosphere )
 		{
-			final floatX = (float) x;
-			final floatY = (float) y;
-			final floatZ = (float) z;
+			final float floatX = (float) x;
+			final float floatY = (float) y;
+			final float floatZ = (float) z;
 			//final floatR = (float) r;
 			final ArrayList< Point3f > icos = createIcosahedron( 2, (float) r );
 			

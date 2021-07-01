@@ -412,9 +412,9 @@ public class SpotGroupNode< K > extends ContentNode
 			final float floatY = (float) y;
 			final float floatZ = (float) z;
 			//final floatR = (float) r;
-			final ArrayList< Point3f > icos = MeshMaker.createIcosahedron( 2, (float) r );
+			final List< Point3f > icos = MeshMaker.createIcosahedron( 2, (float) r );
 			
-			for (int ii = 0; ii < list.size(); ii++)
+			for (int ii = 0; ii < icos.size(); ii++)
 			{
 				list.add( new Point3f( icos.get(ii).getX() + floatX, icos.get(ii).getY() + floatY, icos.get(ii).getZ() + floatZ  ) );
 			}

@@ -404,7 +404,7 @@ public class SpotGroupNode< K > extends ContentNode
 	private List< Point3f > createSphere( final double x, final double y, final double z, final double r, boolean useIcosphere )
 	{
 		// Create triangular faces and add them to the list
-		final ArrayList< Point3f > list = new ArrayList< >(
+		final ArrayList< Point3f > list = new ArrayList< >();
 		
 		if ( useIcosphere )
 		{
@@ -421,7 +421,6 @@ public class SpotGroupNode< K > extends ContentNode
 			return ilst;
 		}
 
-);
 		for ( int j = 0; j < globe.length - 1; j++ )
 		{ // the parallels
 			for ( int k = 0; k < globe[ 0 ].length - 1; k++ )

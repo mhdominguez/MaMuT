@@ -29,15 +29,16 @@ import org.scijava.vecmath.Tuple3d;
 import org.scijava.vecmath.Vector3d;
 
 import customnode.CustomTriangleMesh;
+import customnode.MeshMaker;
 import fiji.plugin.trackmate.visualization.TrackMateModelView;
 import ij3d.ContentNode;
 
 public class SpotGroupNode< K > extends ContentNode
 {
 
-	private static final int DEFAULT_MERIDIAN_NUMBER = 6;
+	private static final int DEFAULT_MERIDIAN_NUMBER = 7;
 
-	private static final int DEFAULT_PARALLEL_NUMBER = 6;
+	private static final int DEFAULT_PARALLEL_NUMBER = 7;
 
 	/**
 	 * The font size
@@ -243,7 +244,7 @@ public class SpotGroupNode< K > extends ContentNode
 			final Color4f color = colors.get( key );
 
 			// Create mesh for the ball
-			final List< Point3f > points = createSphere( center.x, center.y, center.z, center.w );
+			final List< Point3f > points = createSphere( center.x, center.y, center.z, center.w, true );
 			final CustomTriangleMesh node = new CustomTriangleMesh( points, new Color3f( color.x, color.y, color.z ), color.w );
 			// Add it to the switch. We keep an index of the position it is
 			// added to for later retrieval by key
@@ -299,7 +300,7 @@ public class SpotGroupNode< K > extends ContentNode
 	{
 
 		// Sphere
-		final List< Point3f > points = createSphere( center.x, center.y, center.z, center.w );
+		final List< Point3f > points = createSphere( center.x, center.y, center.z, center.w, true );
 		final CustomTriangleMesh node = new CustomTriangleMesh( points, new Color3f( color.x, color.y, color.z ), color.w );
 		final BranchGroup bg1 = new BranchGroup();
 		bg1.setCapability( BranchGroup.ALLOW_DETACH );
@@ -398,9 +399,29 @@ public class SpotGroupNode< K > extends ContentNode
 	 */
 	private List< Point3f > createSphere( final double x, final double y, final double z, final double r )
 	{
-
+		return createSphere( x, y, z, r, false );
+	}
+	private List< Point3f > createSphere( final double x, final double y, final double z, final double r, boolean useIcosphere )
+	{
 		// Create triangular faces and add them to the list
-		final ArrayList< Point3f > list = new ArrayList< >();
+		final ArrayList< Point3f > list = new ArrayList< >(
+		
+		if ( useIcosphere )
+		{
+			final floatX = (float) x;
+			final floatY = (float) y;
+			final floatZ = (float) z;
+			//final floatR = (float) r;
+			final ArrayList< Point3f > icos = createIcosahedron( 2, (float) r );
+			
+			for (int ii = 0; ii < list.size(); ii++)
+			{
+				list.add( new Point3f( icos.get(ii).getX() + floatX, icos.get(ii).getY() + floatY, icos.get(ii).getZ() + floatZ  ) );
+			}
+			return ilst;
+		}
+
+);
 		for ( int j = 0; j < globe.length - 1; j++ )
 		{ // the parallels
 			for ( int k = 0; k < globe[ 0 ].length - 1; k++ )
@@ -572,7 +593,7 @@ public class SpotGroupNode< K > extends ContentNode
 		if ( null == mesh )
 			return;
 		final double r = centers.get( key ).w;
-		mesh.setMesh( createSphere( center.x, center.y, center.z, r ) );
+		mesh.setMesh( createSphere( center.x, center.y, center.z, r, true ) );
 		centers.get( key ).x = center.x;
 		centers.get( key ).y = center.y;
 		centers.get( key ).z = center.z;
@@ -588,7 +609,7 @@ public class SpotGroupNode< K > extends ContentNode
 		final CustomTriangleMesh mesh = meshes.get( key );
 		if ( null == mesh )
 			return;
-		mesh.setMesh( createSphere( center.x, center.y, center.z, center.w ) );
+		mesh.setMesh( createSphere( center.x, center.y, center.z, center.w, true ) );
 		centers.put( key, new Point4d( center ) );
 	}
 
@@ -602,7 +623,7 @@ public class SpotGroupNode< K > extends ContentNode
 		if ( null == mesh )
 			return;
 		final Point4d center = centers.get( key );
-		final List< Point3f > newmesh = createSphere( center.x, center.y, center.z, radius );
+		final List< Point3f > newmesh = createSphere( center.x, center.y, center.z, radius, true );
 		mesh.setMesh( newmesh );
 		center.w = radius;
 	}

@@ -1,7 +1,5 @@
 package fiji.plugin.mamut.threedviewer;
 
-import fiji.plugin.trackmate.gui.Fonts.BIG_FONT;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
@@ -38,6 +36,8 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 {
 
 	static final String KEY = "3DVIEWER";
+	
+	private static final Font BIG_FONT = new Font( "Arial", Font.PLAIN, 14 );	
 
 	public static final int DEFAULT_RESAMPLING_FACTOR = 4;
 	

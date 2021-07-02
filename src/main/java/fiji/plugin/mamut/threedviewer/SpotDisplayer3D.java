@@ -1,5 +1,7 @@
 package fiji.plugin.mamut.threedviewer;
 
+import static fiji.plugin.trackmate.gui.Fonts.BIG_FONT;
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -96,8 +98,9 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 
 	public SpotDisplayer3D( final Model model, final SelectionModel selectionModel, final Image3DUniverse universe )
 	{
-		showOptionsDialog();
 		super( model, selectionModel );
+		
+		showOptionsDialog();		
 		this.universe = universe;
 		setModel( model );
 	}

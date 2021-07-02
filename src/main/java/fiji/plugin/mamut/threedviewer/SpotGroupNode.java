@@ -305,10 +305,10 @@ public class SpotGroupNode< K > extends ContentNode
 			}
 			else
 			{
-				final Text3D textGeom = null;
+				//final Text3D textGeom = null;
 	
-				textGeom.setAlignment( Text3D.ALIGN_FIRST );
-				textShape.addGeometry( textGeom );
+				//textGeom.setAlignment( Text3D.ALIGN_FIRST );
+				//textShape.addGeometry( textGeom );
 			}
 			
 			textShape.setAppearance( textAp );			

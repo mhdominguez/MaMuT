@@ -265,11 +265,11 @@ public class SpotGroupNode< K > extends ContentNode
 			final OrientedShape3D textShape = new OrientedShape3D();
 			textShape.setAlignmentMode( OrientedShape3D.ROTATE_NONE );
 
-			final Text3D textGeom = new Text3D( font3D, key.toString() );
+			//final Text3D textGeom = new Text3D( font3D, key.toString() );
 
-			textGeom.setAlignment( Text3D.ALIGN_FIRST );
-			textShape.addGeometry( textGeom );
-			textShape.setAppearance( textAp );
+			//textGeom.setAlignment( Text3D.ALIGN_FIRST );
+			//textShape.addGeometry( textGeom );
+			//textShape.setAppearance( textAp );
 
 			tg.addChild( textShape );
 			texts.put( key, tg );

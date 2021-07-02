@@ -45,7 +45,7 @@ public class SpotGroupNode< K > extends ContentNode
 	/**
 	 * The font size
 	 */
-	private final float fontsize = 3;
+	private final float fontsize = 8;
 
 	private final Font3D font3D = new Font3D( SMALL_FONT.deriveFont( fontsize ), null );
 
@@ -237,7 +237,7 @@ public class SpotGroupNode< K > extends ContentNode
 	 */
 	protected void makeMeshes(boolean optionsProcessSpots, boolean optionsProcessText)
 	{
-		if ( !( optionsProcessSpots && optionsProcessText ) )
+		if ( !( optionsProcessSpots || optionsProcessText ) )
 		{
 			return;
 		}

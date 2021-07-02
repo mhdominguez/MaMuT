@@ -205,14 +205,14 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 	@Override
 	public void render()
 	{
-		//if ( DEBUG )
+		if ( DEBUG )
 			System.out.println( "[SpotDisplayer3D] Call to render()." );
 
 		updateRadiuses();
 		updateSpotColors();
 		spotContent.setVisible( ( Boolean ) displaySettings.get( KEY_SPOTS_VISIBLE ) );
 		
-		System.out.println( "[SpotDisplayer3D] Call to render(A)." );
+		//System.out.println( "[SpotDisplayer3D] Call to render(A)." );
 		
 		if ( null != trackContent )
 		{
@@ -220,13 +220,13 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 			trackNode.setTrackDisplayMode( ( Integer ) displaySettings.get( KEY_TRACK_DISPLAY_MODE ) );
 			trackNode.setTrackDisplayDepth( ( Integer ) displaySettings.get( KEY_TRACK_DISPLAY_DEPTH ) );
 			updateTrackColors();
-			System.out.println( "[SpotDisplayer3D] Call to render(B)." );
+			//System.out.println( "[SpotDisplayer3D] Call to render(B)." );
 			trackNode.refresh();
 			universe.updateStartAndEndTime( blobs.firstKey(), blobs.lastKey() );
 			universe.updateTimelineGUI();
 		}
 		
-		System.out.println( "[SpotDisplayer3D] Call to render(C)." );
+		//System.out.println( "[SpotDisplayer3D] Call to render(C)." );
 	}
 
 	@Override

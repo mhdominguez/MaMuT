@@ -270,30 +270,31 @@ public class SpotGroupNode< K > extends ContentNode
 			index++;
 
 			// Deal with the text
+			final Transform3D translation = new Transform3D();
+			translation.rotX( Math.PI );
+			translation.setTranslation( new Vector3d( center.x + 1.5f * center.w, center.y, center.z ) );
+			final TransformGroup tg = new TransformGroup( translation );
+	
+			final OrientedShape3D textShape = new OrientedShape3D();
+			textShape.setAlignmentMode( OrientedShape3D.ROTATE_NONE );
+			
 			if ( optionsProcessText ) 
 			{
-				final Transform3D translation = new Transform3D();
-				translation.rotX( Math.PI );
-				translation.setTranslation( new Vector3d( center.x + 1.5f * center.w, center.y, center.z ) );
-				final TransformGroup tg = new TransformGroup( translation );
-	
-				final OrientedShape3D textShape = new OrientedShape3D();
-				textShape.setAlignmentMode( OrientedShape3D.ROTATE_NONE );
-	
 				final Text3D textGeom = new Text3D( font3D, key.toString() );
 	
 				textGeom.setAlignment( Text3D.ALIGN_FIRST );
 				textShape.addGeometry( textGeom );
 				textShape.setAppearance( textAp );
-	
-				tg.addChild( textShape );
-				texts.put( key, tg );
-	
-				final BranchGroup bg2 = new BranchGroup();
-				bg2.addChild( tg );
-				bg2.setCapability( BranchGroup.ALLOW_DETACH );
-				textSwitch.addChild( bg2 );
 			}
+			
+			tg.addChild( textShape );
+			texts.put( key, tg );
+	
+			final BranchGroup bg2 = new BranchGroup();
+			bg2.addChild( tg );
+			bg2.setCapability( BranchGroup.ALLOW_DETACH );
+			textSwitch.addChild( bg2 );
+
 
 		}
 		switchMask = new BitSet( centers.size() );

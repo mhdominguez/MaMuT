@@ -271,15 +271,19 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 
 	private void setModel( final Model model )
 	{
-		if ( ( options[OPTION_PROCESS_SPOTS] || options[OPTION_PROCESS_TEXT] ) && model.getSpots() != null )
+		if ( model.getSpots() != null )
 		{
 			makeSpotContent();
 		}
-		if (  options[OPTION_PROCESS_TRACKS] && model.getTrackModel().nTracks( true ) > 0 )
+		if ( model.getTrackModel().nTracks( true ) > 0 )
 		{
 			trackContent = makeTrackContent();
 			universe.removeContent( TRACK_CONTENT_NAME );
-			universe.addContentLater( trackContent );
+			
+			if ( options[OPTION_PROCESS_TRACKS] )
+			{
+				universe.addContentLater( trackContent );
+			}
 		}
 	}
 
@@ -312,7 +316,7 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 
 		for ( final int frame : spots.keySet() )
 		{
-			if ( spots.getNSpots( frame, false ) == 0 )
+			if ( !( options[OPTION_PROCESS_SPOTS] && options[OPTION_PROCESS_TEXT] ) || spots.getNSpots( frame, false ) == 0 )
 			{
 				continue; // Do not create content for empty frames
 			}

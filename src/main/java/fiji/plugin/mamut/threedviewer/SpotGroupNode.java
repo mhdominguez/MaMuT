@@ -249,8 +249,8 @@ public class SpotGroupNode< K > extends ContentNode
 		{
 			return;
 		}*/
-		System.out.println( "[SpotGroupNode] makeMeshes, optionsProcessSpots:" + String.valueOf(optionsProcessSpots) );
-		System.out.println( "[SpotGroupNode] makeMeshes, optionsProcessText:" + String.valueOf(optionsProcessText) );
+		//System.out.println( "[SpotGroupNode] makeMeshes, optionsProcessSpots:" + String.valueOf(optionsProcessSpots) );
+		//System.out.println( "[SpotGroupNode] makeMeshes, optionsProcessText:" + String.valueOf(optionsProcessText) );
 		
 		for ( final K key : centers.keySet() )
 		{
@@ -340,7 +340,7 @@ public class SpotGroupNode< K > extends ContentNode
 
 	public void add( final K key, final Point4d center, final Color4f color )
 	{
-
+		System.out.println( "public void add" );
 		// Sphere
 		final List< Point3f > points = createSphere( center.x, center.y, center.z, center.w );
 		final CustomTriangleMesh node = new CustomTriangleMesh( points, new Color3f( color.x, color.y, color.z ), color.w );
@@ -442,6 +442,7 @@ public class SpotGroupNode< K > extends ContentNode
 	private List< Point3f > createSphere( final double x, final double y, final double z, final double r )
 	{
 		// Create triangular faces and add them to the list
+		System.out.println( "createSphere" );
 		final ArrayList< Point3f > list = new ArrayList< >();
 		
 		if ( useIcosphere )

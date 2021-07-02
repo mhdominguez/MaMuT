@@ -71,7 +71,7 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 	private static final int OPTION_PROCESS_TRACKS = 2;
 	private static final int OPTION_USE_ICOSPHERES = 3;
 	private static final int OPTION_MAX = 4;	
-	protected final static boolean[] options = new boolean[OPTION_MAX] {true,false,false,true};	
+	protected final static boolean[] options = new boolean[] {true,false,false,true};
 	
 	private void showOptionsDialog()
 	{

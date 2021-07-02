@@ -249,7 +249,8 @@ public class SpotGroupNode< K > extends ContentNode
 		{
 			return;
 		}*/
-		System.out.println( "[SpotGroupNode] makeMeshes." );
+		System.out.println( "[SpotGroupNode] makeMeshes, optionsProcessSpots:" + optionsProcessSpots.booleanValue() ? "1" : "0" );
+		System.out.println( "[SpotGroupNode] makeMeshes, optionsProcessText:" + optionsProcessText.booleanValue() ? "1" : "0" );
 		
 		for ( final K key : centers.keySet() )
 		{
@@ -335,8 +336,6 @@ public class SpotGroupNode< K > extends ContentNode
 		removeAllChildren();
 		addChild( spotSwitch );
 		addChild( textSwitch );
-		
-		System.out.println( "[SpotGroupNode] makeMeshes B." );
 	}
 
 	public void add( final K key, final Point4d center, final Color4f color )

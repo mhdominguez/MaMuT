@@ -140,9 +140,11 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 			break;
 
 		case ModelChangeEvent.TRACKS_COMPUTED:
-			trackContent = makeTrackContent();
+			final boolean processTracks = options[OPTION_PROCESS_TRACKS];
+			trackContent = makeTrackContent(processTracks);
 			universe.removeContent( TRACK_CONTENT_NAME );
-			universe.addContent( trackContent );
+			if (processTracks)
+				universe.addContent( trackContent );
 			break;
 
 		case ModelChangeEvent.TRACKS_VISIBILITY_CHANGED:

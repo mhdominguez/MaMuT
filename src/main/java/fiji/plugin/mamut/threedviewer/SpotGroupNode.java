@@ -271,7 +271,7 @@ public class SpotGroupNode< K > extends ContentNode
 			else
 			{
 				// Create mesh for the ball
-				final CustomTriangleMesh node = new CustomTriangleMesh( new List< >(), new Color3f( color.x, color.y, color.z ), color.w );
+				final CustomTriangleMesh node = new CustomTriangleMesh( new ArrayList< Point3f >(), new Color3f( color.x, color.y, color.z ), color.w );
 				// Add it to the switch. We keep an index of the position it is
 				// added to for later retrieval by key
 				meshes.put( key, node );

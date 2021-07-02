@@ -249,8 +249,8 @@ public class SpotGroupNode< K > extends ContentNode
 		{
 			return;
 		}*/
-		System.out.println( "[SpotGroupNode] makeMeshes, optionsProcessSpots:" + optionsProcessSpots ? "1" : "0" );
-		System.out.println( "[SpotGroupNode] makeMeshes, optionsProcessText:" + optionsProcessText ? "1" : "0" );
+		System.out.println( "[SpotGroupNode] makeMeshes, optionsProcessSpots:" + String.valueOf(optionsProcessSpots) );
+		System.out.println( "[SpotGroupNode] makeMeshes, optionsProcessText:" + String.valueOf(optionsProcessText) );
 		
 		for ( final K key : centers.keySet() )
 		{

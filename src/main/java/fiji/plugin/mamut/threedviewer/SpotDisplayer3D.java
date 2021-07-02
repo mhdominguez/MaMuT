@@ -76,6 +76,12 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 	private static final int OPTION_MAX = 4;	
 	protected final static boolean[] options = new boolean[] {true,false,false,true};
 	
+	private void debugDialog( String message )
+	{
+		final GenericDialogPlus dialog = new GenericDialogPlus( "DEBUG" );
+		dialog.addMessage( message, BIG_FONT );	
+	}
+	
 	private void showOptionsDialog()
 	{
 		final GenericDialogPlus dialog = new GenericDialogPlus( "Optimization Options" );
@@ -199,22 +205,28 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 	@Override
 	public void render()
 	{
-		if ( DEBUG )
+		//if ( DEBUG )
 			System.out.println( "[SpotDisplayer3D] Call to render()." );
 
 		updateRadiuses();
 		updateSpotColors();
 		spotContent.setVisible( ( Boolean ) displaySettings.get( KEY_SPOTS_VISIBLE ) );
+		
+		System.out.println( "[SpotDisplayer3D] Call to render(A)." );
+		
 		if ( null != trackContent )
 		{
 			trackContent.setVisible( ( Boolean ) displaySettings.get( KEY_TRACKS_VISIBLE ) );
 			trackNode.setTrackDisplayMode( ( Integer ) displaySettings.get( KEY_TRACK_DISPLAY_MODE ) );
 			trackNode.setTrackDisplayDepth( ( Integer ) displaySettings.get( KEY_TRACK_DISPLAY_DEPTH ) );
 			updateTrackColors();
+			System.out.println( "[SpotDisplayer3D] Call to render(B)." );
 			trackNode.refresh();
 			universe.updateStartAndEndTime( blobs.firstKey(), blobs.lastKey() );
 			universe.updateTimelineGUI();
 		}
+		
+		System.out.println( "[SpotDisplayer3D] Call to render(C)." );
 	}
 
 	@Override

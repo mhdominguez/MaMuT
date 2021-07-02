@@ -271,27 +271,29 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 
 	private void setModel( final Model model )
 	{
+		final boolean processTracks = options[OPTION_PROCESS_TRACKS];
 		if ( model.getSpots() != null )
 		{
 			makeSpotContent();
 		}
 		if ( model.getTrackModel().nTracks( true ) > 0 )
 		{
-			trackContent = makeTrackContent();
+			trackContent = makeTrackContent( processTracks );
 			universe.removeContent( TRACK_CONTENT_NAME );
 			
-			if ( options[OPTION_PROCESS_TRACKS] )
+			if ( processTracks )
 			{
 				universe.addContentLater( trackContent );
 			}
 		}
 	}
 
-	private Content makeTrackContent()
+	private Content makeTrackContent( boolean processTracks )
 	{
 		// Prepare tracks instant
 		trackNode = new TrackDisplayNode( model );
-		universe.addTimelapseListener( trackNode );
+		if ( processTracks )
+			universe.addTimelapseListener( trackNode );
 
 		// Pass tracks instant to all instants
 		final TreeMap< Integer, ContentInstant > instants = new TreeMap< >();

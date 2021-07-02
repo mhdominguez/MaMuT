@@ -237,17 +237,19 @@ public class SpotGroupNode< K > extends ContentNode
 	 */
 	protected void makeMeshes(boolean optionsProcessSpots, boolean optionsProcessText)
 	{
-		if ( !( optionsProcessSpots || optionsProcessText ) )
-		{
-			return;
-		}
+
 		meshes = new HashMap< >( centers.size() );
 		texts = new HashMap< >( centers.size() );
 		indices = new HashMap< >( centers.size() );
 		spotSwitch.removeAllChildren();
 		textSwitch.removeAllChildren();
 		int index = 0;
-
+		
+		/*if ( !( optionsProcessSpots || optionsProcessText ) )
+		{
+			return;
+		}*/
+		
 		for ( final K key : centers.keySet() )
 		{
 			final Point4d center = centers.get( key );
@@ -266,6 +268,19 @@ public class SpotGroupNode< K > extends ContentNode
 				bg.addChild( node );
 				spotSwitch.addChild( bg ); // at index
 			}
+			else
+			{
+				// Create mesh for the ball
+				final CustomTriangleMesh node = new CustomTriangleMesh( new List< Point3f >, new Color3f( color.x, color.y, color.z ), color.w );
+				// Add it to the switch. We keep an index of the position it is
+				// added to for later retrieval by key
+				meshes.put( key, node );
+				final BranchGroup bg = new BranchGroup();
+				bg.setCapability( BranchGroup.ALLOW_DETACH );
+				bg.addChild( node );
+				spotSwitch.addChild( bg ); // at index
+			}
+			
 			indices.put( key, index ); // store index for key
 			index++;
 
@@ -284,9 +299,17 @@ public class SpotGroupNode< K > extends ContentNode
 	
 				textGeom.setAlignment( Text3D.ALIGN_FIRST );
 				textShape.addGeometry( textGeom );
-				textShape.setAppearance( textAp );
+
+			}
+			else
+			{
+				final Text3D textGeom = new Text3D( font3D, "" );
+	
+				textGeom.setAlignment( Text3D.ALIGN_FIRST );
+				textShape.addGeometry( textGeom );
 			}
 			
+			textShape.setAppearance( textAp );			
 			tg.addChild( textShape );
 			texts.put( key, tg );
 	

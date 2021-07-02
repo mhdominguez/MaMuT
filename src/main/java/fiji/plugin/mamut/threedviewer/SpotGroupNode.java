@@ -39,6 +39,8 @@ public class SpotGroupNode< K > extends ContentNode
 	private static final int DEFAULT_MERIDIAN_NUMBER = 7;
 
 	private static final int DEFAULT_PARALLEL_NUMBER = 7;
+	
+	private static boolean useIcosphere = true;
 
 	/**
 	 * The font size
@@ -130,7 +132,7 @@ public class SpotGroupNode< K > extends ContentNode
 	 * @param centers
 	 * @param colors
 	 */
-	public SpotGroupNode( final Map< K, Point4d > centers, final Map< K, Color4f > colors )
+	public SpotGroupNode( final Map< K, Point4d > centers, final Map< K, Color4f > colors, boolean optionsProcessSpots, boolean optionsProcessText, boolean optionsUseIcospheres )
 	{
 		this.centers = new HashMap< >( centers );
 		this.colors = new HashMap< >( colors );
@@ -146,7 +148,9 @@ public class SpotGroupNode< K > extends ContentNode
 		textSwitch.setCapability( Group.ALLOW_CHILDREN_EXTEND );
 		//
 		this.switchMask = new BitSet();
-		makeMeshes();
+		//
+		useIcosphere = optionsUseIcospheres;			
+		makeMeshes(optionsProcessSpots,optionsProcessText);
 	}
 
 	/**
@@ -166,7 +170,7 @@ public class SpotGroupNode< K > extends ContentNode
 	 * @param color
 	 *            the spot color as Color3f.
 	 */
-	public SpotGroupNode( final HashMap< K, Point4d > centers, final Color3f color )
+	public SpotGroupNode( final HashMap< K, Point4d > centers, final Color3f color, boolean optionsProcessSpots, boolean optionsProcessText, boolean optionsUseIcospheres )
 	{
 		this.centers = new HashMap< >( centers );
 		this.colors = new HashMap< >( centers.size() );
@@ -185,7 +189,9 @@ public class SpotGroupNode< K > extends ContentNode
 		textSwitch.setCapability( Group.ALLOW_CHILDREN_EXTEND );
 		//
 		this.switchMask = new BitSet();
-		makeMeshes();
+		//
+		useIcosphere = optionsUseIcospheres;		
+		makeMeshes(optionsProcessSpots,optionsProcessText);
 	}
 
 	@Override
@@ -229,8 +235,12 @@ public class SpotGroupNode< K > extends ContentNode
 	 * This resets the {@link #spotSwitch} and the {@link #switchMask} fields
 	 * with new values.
 	 */
-	protected void makeMeshes()
+	protected void makeMeshes(boolean optionsProcessSpots, boolean optionsProcessText)
 	{
+		if ( !( optionsProcessSpots || optionsProcessText ) )
+		{
+			return;
+		}
 		meshes = new HashMap< >( centers.size() );
 		texts = new HashMap< >( centers.size() );
 		indices = new HashMap< >( centers.size() );
@@ -242,42 +252,48 @@ public class SpotGroupNode< K > extends ContentNode
 		{
 			final Point4d center = centers.get( key );
 			final Color4f color = colors.get( key );
-
-			// Create mesh for the ball
-			final List< Point3f > points = createSphere( center.x, center.y, center.z, center.w, true );
-			final CustomTriangleMesh node = new CustomTriangleMesh( points, new Color3f( color.x, color.y, color.z ), color.w );
-			// Add it to the switch. We keep an index of the position it is
-			// added to for later retrieval by key
-			meshes.put( key, node );
-			final BranchGroup bg = new BranchGroup();
-			bg.setCapability( BranchGroup.ALLOW_DETACH );
-			bg.addChild( node );
-			spotSwitch.addChild( bg ); // at index
+			
+			if ( optionsProcessSpots ) 
+			{
+				// Create mesh for the ball
+				final List< Point3f > points = createSphere( center.x, center.y, center.z, center.w );
+				final CustomTriangleMesh node = new CustomTriangleMesh( points, new Color3f( color.x, color.y, color.z ), color.w );
+				// Add it to the switch. We keep an index of the position it is
+				// added to for later retrieval by key
+				meshes.put( key, node );
+				final BranchGroup bg = new BranchGroup();
+				bg.setCapability( BranchGroup.ALLOW_DETACH );
+				bg.addChild( node );
+				spotSwitch.addChild( bg ); // at index
+			}
 			indices.put( key, index ); // store index for key
 			index++;
 
 			// Deal with the text
-			final Transform3D translation = new Transform3D();
-			translation.rotX( Math.PI );
-			translation.setTranslation( new Vector3d( center.x + 1.5f * center.w, center.y, center.z ) );
-			final TransformGroup tg = new TransformGroup( translation );
-
-			final OrientedShape3D textShape = new OrientedShape3D();
-			textShape.setAlignmentMode( OrientedShape3D.ROTATE_NONE );
-
-			//final Text3D textGeom = new Text3D( font3D, key.toString() );
-
-			//textGeom.setAlignment( Text3D.ALIGN_FIRST );
-			//textShape.addGeometry( textGeom );
-			//textShape.setAppearance( textAp );
-
-			tg.addChild( textShape );
-			texts.put( key, tg );
-
-			final BranchGroup bg2 = new BranchGroup();
-			bg2.addChild( tg );
-			bg2.setCapability( BranchGroup.ALLOW_DETACH );
-			textSwitch.addChild( bg2 );
+			if ( optionsProcessText ) 
+			{
+				final Transform3D translation = new Transform3D();
+				translation.rotX( Math.PI );
+				translation.setTranslation( new Vector3d( center.x + 1.5f * center.w, center.y, center.z ) );
+				final TransformGroup tg = new TransformGroup( translation );
+	
+				final OrientedShape3D textShape = new OrientedShape3D();
+				textShape.setAlignmentMode( OrientedShape3D.ROTATE_NONE );
+	
+				final Text3D textGeom = new Text3D( font3D, key.toString() );
+	
+				textGeom.setAlignment( Text3D.ALIGN_FIRST );
+				textShape.addGeometry( textGeom );
+				textShape.setAppearance( textAp );
+	
+				tg.addChild( textShape );
+				texts.put( key, tg );
+	
+				final BranchGroup bg2 = new BranchGroup();
+				bg2.addChild( tg );
+				bg2.setCapability( BranchGroup.ALLOW_DETACH );
+				textSwitch.addChild( bg2 );
+			}
 
 		}
 		switchMask = new BitSet( centers.size() );
@@ -300,7 +316,7 @@ public class SpotGroupNode< K > extends ContentNode
 	{
 
 		// Sphere
-		final List< Point3f > points = createSphere( center.x, center.y, center.z, center.w, true );
+		final List< Point3f > points = createSphere( center.x, center.y, center.z, center.w );
 		final CustomTriangleMesh node = new CustomTriangleMesh( points, new Color3f( color.x, color.y, color.z ), color.w );
 		final BranchGroup bg1 = new BranchGroup();
 		bg1.setCapability( BranchGroup.ALLOW_DETACH );
@@ -398,10 +414,6 @@ public class SpotGroupNode< K > extends ContentNode
 	 * Will throw a NPE if {@link #generateGlobe(int, int)} is not called before.
 	 */
 	private List< Point3f > createSphere( final double x, final double y, final double z, final double r )
-	{
-		return createSphere( x, y, z, r, false );
-	}
-	private List< Point3f > createSphere( final double x, final double y, final double z, final double r, boolean useIcosphere )
 	{
 		// Create triangular faces and add them to the list
 		final ArrayList< Point3f > list = new ArrayList< >();
@@ -592,7 +604,7 @@ public class SpotGroupNode< K > extends ContentNode
 		if ( null == mesh )
 			return;
 		final double r = centers.get( key ).w;
-		mesh.setMesh( createSphere( center.x, center.y, center.z, r, true ) );
+		mesh.setMesh( createSphere( center.x, center.y, center.z, r ) );
 		centers.get( key ).x = center.x;
 		centers.get( key ).y = center.y;
 		centers.get( key ).z = center.z;
@@ -608,7 +620,7 @@ public class SpotGroupNode< K > extends ContentNode
 		final CustomTriangleMesh mesh = meshes.get( key );
 		if ( null == mesh )
 			return;
-		mesh.setMesh( createSphere( center.x, center.y, center.z, center.w, true ) );
+		mesh.setMesh( createSphere( center.x, center.y, center.z, center.w ) );
 		centers.put( key, new Point4d( center ) );
 	}
 
@@ -622,7 +634,7 @@ public class SpotGroupNode< K > extends ContentNode
 		if ( null == mesh )
 			return;
 		final Point4d center = centers.get( key );
-		final List< Point3f > newmesh = createSphere( center.x, center.y, center.z, radius, true );
+		final List< Point3f > newmesh = createSphere( center.x, center.y, center.z, radius );
 		mesh.setMesh( newmesh );
 		center.w = radius;
 	}

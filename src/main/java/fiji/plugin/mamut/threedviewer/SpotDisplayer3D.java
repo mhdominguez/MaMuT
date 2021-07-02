@@ -26,6 +26,7 @@ import fiji.plugin.trackmate.visualization.AbstractTrackMateModelView;
 import fiji.plugin.trackmate.visualization.FeatureColorGenerator;
 import fiji.plugin.trackmate.visualization.TrackColorGenerator;
 import fiji.plugin.trackmate.visualization.TrackMateModelView;
+import ij.gui.GenericDialogPlus;
 import ij3d.Content;
 import ij3d.ContentInstant;
 import ij3d.Image3DUniverse;
@@ -36,7 +37,7 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 	static final String KEY = "3DVIEWER";
 
 	public static final int DEFAULT_RESAMPLING_FACTOR = 4;
-
+	
 	// public static final int DEFAULT_THRESHOLD = 50;
 
 	private static final boolean DEBUG = false;
@@ -63,9 +64,39 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 	private HashMap< Spot, Integer > previousFrameHighlight;
 
 	private TreeMap< Integer, ContentInstant > contentAllFrames;
+	
+	// Options for optimizing for large datasets
+	private static final int OPTION_PROCESS_SPOTS = 0;
+	private static final int OPTION_PROCESS_TEXT = 1;
+	private static final int OPTION_PROCESS_TRACKS = 2;
+	private static final int OPTION_USE_ICOSPHERES = 3;
+	private static final int OPTION_MAX = 4;	
+	protected final static boolean[] options = new boolean[OPTION_MAX] {true,false,false,true};	
+	
+	private void showOptionsDialog()
+	{
+		final GenericDialogPlus dialog = new GenericDialogPlus( "Optimization Options" );
+
+		dialog.addMessage( "3D Viewer optimizations for large dataset rendering...", BIG_FONT );
+
+		dialog.addCheckbox( "Process spots", options[OPTION_PROCESS_SPOTS] );
+		dialog.addCheckbox( "Process text", options[OPTION_PROCESS_TEXT] );
+		dialog.addCheckbox( "Process tracks", options[OPTION_PROCESS_TRACKS] );
+		dialog.addCheckbox( "Use icospheres for spots (uses less RAM)", options[OPTION_USE_ICOSPHERES] );
+		
+		dialog.showDialog();
+
+		if ( dialog.wasCanceled() ) { return; }
+
+		options[OPTION_PROCESS_SPOTS] = dialog.getNextBoolean();
+		options[OPTION_PROCESS_TEXT] = dialog.getNextBoolean();
+		options[OPTION_PROCESS_TRACKS] = dialog.getNextBoolean();
+		options[OPTION_USE_ICOSPHERES] = dialog.getNextBoolean();
+	}	
 
 	public SpotDisplayer3D( final Model model, final SelectionModel selectionModel, final Image3DUniverse universe )
 	{
+		showOptionsDialog();
 		super( model, selectionModel );
 		this.universe = universe;
 		setModel( model );
@@ -236,11 +267,11 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 
 	private void setModel( final Model model )
 	{
-		if ( model.getSpots() != null )
+		if ( ( options[OPTION_PROCESS_SPOTS] || options[OPTION_PROCESS_TEXT] ) && model.getSpots() != null )
 		{
 			makeSpotContent();
 		}
-		if ( model.getTrackModel().nTracks( true ) > 0 )
+		if (  options[OPTION_PROCESS_TRACKS] && model.getTrackModel().nTracks( true ) > 0 )
 		{
 			trackContent = makeTrackContent();
 			universe.removeContent( TRACK_CONTENT_NAME );
@@ -307,7 +338,7 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 			col.w = 0f;
 			colors.put( spot, col );
 		}
-		final SpotGroupNode< Spot > blobGroup = new SpotGroupNode< >( centers, colors );
+		final SpotGroupNode< Spot > blobGroup = new SpotGroupNode< >( centers, colors, options[OPTION_PROCESS_SPOTS], options[OPTION_PROCESS_TEXT], options[OPTION_USE_ICOSPHERES] );
 		final ContentInstant contentThisFrame = new ContentInstant( "Spots_frame_" + frame );
 
 		try

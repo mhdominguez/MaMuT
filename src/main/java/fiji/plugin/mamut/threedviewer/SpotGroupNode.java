@@ -36,9 +36,9 @@ import ij3d.ContentNode;
 public class SpotGroupNode< K > extends ContentNode
 {
 
-	private static final int DEFAULT_MERIDIAN_NUMBER = 7;
+	private static final int DEFAULT_MERIDIAN_NUMBER = 10;
 
-	private static final int DEFAULT_PARALLEL_NUMBER = 7;
+	private static final int DEFAULT_PARALLEL_NUMBER = 10;
 	
 	private static boolean useIcosphere = true;
 

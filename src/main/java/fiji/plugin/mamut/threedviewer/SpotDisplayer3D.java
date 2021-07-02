@@ -1,7 +1,6 @@
 package fiji.plugin.mamut.threedviewer;
 
-import static fiji.plugin.trackmate.gui.Fonts.BIG_FONT;
-import static fiji.plugin.trackmate.gui.Fonts.FONT;
+import fiji.plugin.trackmate.gui.Fonts.BIG_FONT;
 
 import java.awt.Color;
 import java.awt.Font;

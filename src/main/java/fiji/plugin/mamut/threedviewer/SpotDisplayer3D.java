@@ -26,7 +26,7 @@ import fiji.plugin.trackmate.visualization.AbstractTrackMateModelView;
 import fiji.plugin.trackmate.visualization.FeatureColorGenerator;
 import fiji.plugin.trackmate.visualization.TrackColorGenerator;
 import fiji.plugin.trackmate.visualization.TrackMateModelView;
-import ij.gui.GenericDialogPlus;
+import fiji.util.gui.GenericDialogPlus;
 import ij3d.Content;
 import ij3d.ContentInstant;
 import ij3d.Image3DUniverse;

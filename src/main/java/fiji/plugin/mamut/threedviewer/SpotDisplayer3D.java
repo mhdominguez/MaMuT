@@ -1,8 +1,10 @@
 package fiji.plugin.mamut.threedviewer;
 
 import static fiji.plugin.trackmate.gui.Fonts.BIG_FONT;
+import static fiji.plugin.trackmate.gui.Fonts.FONT;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

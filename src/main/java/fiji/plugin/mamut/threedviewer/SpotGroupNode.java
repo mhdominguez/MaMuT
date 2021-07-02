@@ -237,7 +237,7 @@ public class SpotGroupNode< K > extends ContentNode
 	 */
 	protected void makeMeshes(boolean optionsProcessSpots, boolean optionsProcessText)
 	{
-		if ( !( optionsProcessSpots || optionsProcessText ) )
+		if ( !( optionsProcessSpots && optionsProcessText ) )
 		{
 			return;
 		}

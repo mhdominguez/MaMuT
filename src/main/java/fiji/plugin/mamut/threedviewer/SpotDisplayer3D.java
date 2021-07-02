@@ -76,11 +76,13 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 	private static final int OPTION_MAX = 4;	
 	protected final static boolean[] options = new boolean[] {true,false,false,true};
 	
+	/*
 	private void debugDialog( String message )
 	{
 		final GenericDialogPlus dialog = new GenericDialogPlus( "DEBUG" );
 		dialog.addMessage( message, BIG_FONT );	
 	}
+	*/
 	
 	private void showOptionsDialog()
 	{
@@ -332,7 +334,7 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 
 		for ( final int frame : spots.keySet() )
 		{
-			if ( !( options[OPTION_PROCESS_SPOTS] && options[OPTION_PROCESS_TEXT] ) || spots.getNSpots( frame, false ) == 0 )
+			if ( spots.getNSpots( frame, false ) == 0 )
 			{
 				continue; // Do not create content for empty frames
 			}

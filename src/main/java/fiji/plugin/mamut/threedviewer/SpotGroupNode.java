@@ -1,6 +1,6 @@
 package fiji.plugin.mamut.threedviewer;
 
-import static fiji.plugin.trackmate.gui.TrackMateWizard.SMALL_FONT;
+import static fiji.plugin.trackmate.gui.TrackMateWizard.FONT;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -45,9 +45,9 @@ public class SpotGroupNode< K > extends ContentNode
 	/**
 	 * The font size
 	 */
-	private final float fontsize = 8;
+	private final float fontsize = 3;
 
-	private final Font3D font3D = new Font3D( SMALL_FONT.deriveFont( fontsize ), null );
+	private final Font3D font3D = new Font3D( FONT.deriveFont( fontsize ), null );
 
 	private final Appearance textAp = new Appearance();
 
@@ -249,6 +249,7 @@ public class SpotGroupNode< K > extends ContentNode
 		{
 			return;
 		}*/
+		System.out.println( "[SpotGroupNode] makeMeshes." );
 		
 		for ( final K key : centers.keySet() )
 		{
@@ -334,6 +335,8 @@ public class SpotGroupNode< K > extends ContentNode
 		removeAllChildren();
 		addChild( spotSwitch );
 		addChild( textSwitch );
+		
+		System.out.println( "[SpotGroupNode] makeMeshes B." );
 	}
 
 	public void add( final K key, final Point4d center, final Color4f color )

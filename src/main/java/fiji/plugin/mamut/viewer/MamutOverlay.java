@@ -431,8 +431,8 @@ public class MamutOverlay
 								//triangleVector[2] /= vecNormalize; //Z coordinate actually doesn't need to get normalized
 	
 								//rotate the trajectory vector +120 and -120 in the Z axis, to produce the vectors emanating from triangleCenter and ending on the other two points of the triangle
-								final int[] x = new int[] {(int)(triangleCenter[0]+triangleVector[0]),(int)(triangleCenter[0]+triangleVector[0]*COSINE_120-triangleVector[1]*SINE_120),(int)(triangleCenter[0]+triangleVector[0]*COSINE_NEG120-triangleVector[1]*SINE_NEG120)};
-								final int[] y = new int[] {(int)(triangleCenter[1]+triangleVector[1]),(int)(triangleCenter[1]+triangleVector[0]*SINE_120+triangleVector[1]*COSINE_120),(int)(triangleCenter[1]+triangleVector[0]*SINE_NEG120+triangleVector[1]*COSINE_NEG120)};
+								final int[] x = new int[] {(int)(triangleCenter[0]+(1.5*triangleVector[0])),(int)(triangleCenter[0]+triangleVector[0]*COSINE_120-triangleVector[1]*SINE_120),(int)(triangleCenter[0]+triangleVector[0]*COSINE_NEG120-triangleVector[1]*SINE_NEG120)};
+								final int[] y = new int[] {(int)(triangleCenter[1]+(1.5*triangleVector[1])),(int)(triangleCenter[1]+triangleVector[0]*SINE_120+triangleVector[1]*COSINE_120),(int)(triangleCenter[1]+triangleVector[0]*SINE_NEG120+triangleVector[1]*COSINE_NEG120)};
 								
 								
 								

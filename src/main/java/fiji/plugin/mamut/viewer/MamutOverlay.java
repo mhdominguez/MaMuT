@@ -406,11 +406,13 @@ public class MamutOverlay
 								final double dz2 = zv * zv;	
 								
 								//determine rise/run for the local track
-								final double[] triangleVector = new double[] {localEnd[0] - triangleCenter[0],localEnd[1] - triangleCenter[1],localEnd[2] - triangleCenter[2]};
+								//final double[] triangleVector = new double[] {localEnd[0] - triangleCenter[0],localEnd[1] - triangleCenter[1],localEnd[2] - triangleCenter[2]};
+								final double[] triangleVector = new double[] {localEnd[0] - triangleCenter[0],localEnd[1] - triangleCenter[1],0f};
 								
 								//are we in view or not; if not, shrink radius considerably
-								final double arad = Math.sqrt( rad - dz2 );
-					
+								final double arad = Math.sqrt( rad - dz2 ) / 2; //should actually divide by sqrt(3) but 2 is easier
+						
+								/*
 								if ( dz2 < rad )
 								{
 									g.drawOval( ( int ) ( triangleCenter[ 0 ] - arad ), ( int ) ( triangleCenter[ 1 ] - arad ), ( int ) ( 2 * arad ), ( int ) ( 2 * arad ) );
@@ -419,17 +421,21 @@ public class MamutOverlay
 								{
 									g.fillOval( ( int ) triangleCenter[ 0 ] - 2, ( int ) triangleCenter[ 1 ] - 2, 4, 4 );
 								}
+								*/
 									
 								//normalize vector length to the desired radius
 								final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1] + triangleVector[2]*triangleVector[2]) / arad;
 								//final double vecNormalize = Math.sqrt(triangleVector[0]*triangleVector[0] + triangleVector[1]*triangleVector[1]) / arad;
 								triangleVector[0] /= vecNormalize;
 								triangleVector[1] /= vecNormalize;
-								triangleVector[2] /= vecNormalize; //Z coordinate actually doesn't need to get normalized
+								//triangleVector[2] /= vecNormalize; //Z coordinate actually doesn't need to get normalized
 	
 								//rotate the trajectory vector +120 and -120 in the Z axis, to produce the vectors emanating from triangleCenter and ending on the other two points of the triangle
 								final int[] x = new int[] {(int)(triangleCenter[0]+triangleVector[0]),(int)(triangleCenter[0]+triangleVector[0]*COSINE_120-triangleVector[1]*SINE_120),(int)(triangleCenter[0]+triangleVector[0]*COSINE_NEG120-triangleVector[1]*SINE_NEG120)};
-								final int[] y = new int[] {(int)(triangleCenter[1]+triangleVector[1]),(int)(triangleCenter[1]+triangleVector[0]*COSINE_120+triangleVector[1]*SINE_120),(int)(triangleCenter[1]+triangleVector[0]*COSINE_NEG120+triangleVector[1]*SINE_NEG120)};
+								final int[] y = new int[] {(int)(triangleCenter[1]+triangleVector[1]),(int)(triangleCenter[1]+triangleVector[0]*SINE_120+triangleVector[1]*COSINE_120),(int)(triangleCenter[1]+triangleVector[0]*SINE_NEG120+triangleVector[1]*COSINE_NEG120)};
+								
+								
+								
 								g.setStroke( stroke );
 								g.drawPolygon(x,y,3);
 								

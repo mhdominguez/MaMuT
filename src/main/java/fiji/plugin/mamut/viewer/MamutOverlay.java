@@ -389,6 +389,8 @@ public class MamutOverlay
 							transform.apply( globalCoords, localEnd );
 							
 							//set color
+							color = TrackMateModelView.DEFAULT_SPOT_COLOR;
+							
 							if ( selectionModel.getSpotSelection().contains( source ) && trackDisplayMode != TrackMateModelView.TRACK_DISPLAY_MODE_SELECTION_ONLY )
 							{
 								Stroke stroke;

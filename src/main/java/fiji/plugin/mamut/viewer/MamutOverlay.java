@@ -227,7 +227,15 @@ public class MamutOverlay
 			
 			final Set< Integer > filteredTrackIDs = model.getTrackModel().unsortedTrackIDs( true );
 
-			g.setStroke( NORMAL_STROKE );
+			if ( drawCellTriangles )
+			{
+				g.setStroke( HALF_SELECTION_STROKE );
+			}
+			else
+			{
+				g.setStroke( NORMAL_STROKE );
+			}
+			
 			if ( trackDisplayMode == TrackMateModelView.TRACK_DISPLAY_MODE_LOCAL || trackDisplayMode == TrackMateModelView.TRACK_DISPLAY_MODE_LOCAL_QUICK )
 				g.setComposite( AlphaComposite.getInstance( AlphaComposite.SRC_OVER ) );
 
@@ -372,7 +380,7 @@ public class MamutOverlay
 							boolean forceDraw = !doLimitDrawingDepth;
 							final double spotRadius = source.getFeature( Spot.RADIUS );
 							Color color;
-							Stroke stroke;
+							
 						
 							//trangle center at source, and find this edge's endpoint to determine vector where triangle will point
 							double[] globalCoords = new double[] { source.getFeature( Spot.POSITION_X ), source.getFeature( Spot.POSITION_Y ), source.getFeature( Spot.POSITION_Z ) };
@@ -383,16 +391,18 @@ public class MamutOverlay
 							//set color
 							if ( selectionModel.getSpotSelection().contains( source ) && trackDisplayMode != TrackMateModelView.TRACK_DISPLAY_MODE_SELECTION_ONLY )
 							{
+								Stroke stroke;
 								forceDraw = true; // Selection is drawn unconditionally.
 								color = TrackMateModelView.DEFAULT_HIGHLIGHT_COLOR;
 								stroke = SELECTION_STROKE;
+								g.setStroke( stroke );
 							}
-							else
-							{
-								if ( null == viewer.spotColorProvider || null == ( color = viewer.spotColorProvider.color( source ) ) )
-									color = TrackMateModelView.DEFAULT_SPOT_COLOR;
-								stroke = HALF_SELECTION_STROKE;
-							}
+							//else
+							//{
+							//	if ( null == viewer.spotColorProvider || null == ( color = viewer.spotColorProvider.color( source ) ) )
+							//		color = TrackMateModelView.DEFAULT_SPOT_COLOR;
+							//	stroke = HALF_SELECTION_STROKE;
+							//}
 						
 							//now, draw triangle as established above
 							if ( forceDraw || Math.abs( triangleCenter[2] ) <= drawingDepth )
@@ -434,13 +444,10 @@ public class MamutOverlay
 								final int[] x = new int[] {(int)(triangleCenter[0]+(1.5*triangleVector[0])),(int)(triangleCenter[0]+triangleVector[0]*COSINE_120-triangleVector[1]*SINE_120),(int)(triangleCenter[0]+triangleVector[0]*COSINE_NEG120-triangleVector[1]*SINE_NEG120)};
 								final int[] y = new int[] {(int)(triangleCenter[1]+(1.5*triangleVector[1])),(int)(triangleCenter[1]+triangleVector[0]*SINE_120+triangleVector[1]*COSINE_120),(int)(triangleCenter[1]+triangleVector[0]*SINE_NEG120+triangleVector[1]*COSINE_NEG120)};
 								
-								
-								
-								g.setStroke( stroke );
 								g.drawPolygon(x,y,3);
 								
-								//reset stroke for edge drawing
-								g.setStroke( NORMAL_STROKE );
+								//reset stroke for edge drawing, in case was bumped up earlier
+								g.setStroke( HALF_SELECTION_STROKE );
 							}
 						}
 						

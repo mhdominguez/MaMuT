@@ -388,9 +388,7 @@ public class MamutOverlay
 							globalCoords = new double[] { target.getFeature( Spot.POSITION_X ), target.getFeature( Spot.POSITION_Y ), target.getFeature( Spot.POSITION_Z ) };
 							transform.apply( globalCoords, localEnd );
 							
-							//set color
-							color = TrackMateModelView.DEFAULT_SPOT_COLOR;
-							
+							//set color							
 							if ( selectionModel.getSpotSelection().contains( source ) && trackDisplayMode != TrackMateModelView.TRACK_DISPLAY_MODE_SELECTION_ONLY )
 							{
 								Stroke stroke;
@@ -399,12 +397,12 @@ public class MamutOverlay
 								stroke = SELECTION_STROKE;
 								g.setStroke( stroke );
 							}
-							//else
-							//{
-							//	if ( null == viewer.spotColorProvider || null == ( color = viewer.spotColorProvider.color( source ) ) )
-							//		color = TrackMateModelView.DEFAULT_SPOT_COLOR;
-							//	stroke = HALF_SELECTION_STROKE;
-							//}
+							else
+							{
+								if ( null == viewer.spotColorProvider || null == ( color = viewer.spotColorProvider.color( source ) ) )
+									color = TrackMateModelView.DEFAULT_SPOT_COLOR;
+								//stroke = HALF_SELECTION_STROKE;
+							}
 						
 							//now, draw triangle as established above
 							if ( forceDraw || Math.abs( triangleCenter[2] ) <= drawingDepth )

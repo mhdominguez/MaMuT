@@ -53,7 +53,7 @@ public class MamutOverlay
 	protected static final Font DEFAULT_FONT = new Font( "Monospaced", Font.PLAIN, 10 );
 
 	protected static final Stroke SELECTION_STROKE = new BasicStroke( 4.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND );
-	protected static final Stroke HALF_SELECTION_STROKE = new BasicStroke( 2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND );
+	protected static final Stroke HALF_SELECTION_STROKE = new BasicStroke( 3.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND );
 
 	protected static final Stroke NORMAL_STROKE = new BasicStroke();
 	

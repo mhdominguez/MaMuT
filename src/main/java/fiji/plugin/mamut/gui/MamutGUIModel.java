@@ -2,7 +2,7 @@
  * #%L
  * Fiji plugin for the annotation of massive, multi-view data.
  * %%
- * Copyright (C) 2012 - 2021 MaMuT development team.
+ * Copyright (C) 2012 - 2022 MaMuT development team.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -21,9 +21,13 @@
  */
 package fiji.plugin.mamut.gui;
 
-import fiji.plugin.trackmate.gui.TrackMateGUIModel;
+import java.util.HashSet;
+import java.util.Set;
 
-public class MamutGUIModel extends TrackMateGUIModel {
+import fiji.plugin.trackmate.visualization.TrackMateModelView;
+
+public class MamutGUIModel
+{
 
 	/**
 	 * How close must be the new spot found to be accepted, in radius units.
@@ -47,5 +51,6 @@ public class MamutGUIModel extends TrackMateGUIModel {
 	 */
 	public int timeStep = 5;
 
+	public final Set< TrackMateModelView > views = new HashSet<>();
 
 }

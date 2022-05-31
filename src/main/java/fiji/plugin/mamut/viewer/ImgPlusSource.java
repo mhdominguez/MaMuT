@@ -2,7 +2,7 @@
  * #%L
  * Fiji plugin for the annotation of massive, multi-view data.
  * %%
- * Copyright (C) 2012 - 2021 MaMuT development team.
+ * Copyright (C) 2012 - 2022 MaMuT development team.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -72,9 +72,7 @@ public class ImgPlusSource< T extends NumericType< T > > implements Source< T >
 			factory = new NLinearInterpolatorFactory<>();
 			break;
 		}
-		final T zero = img.firstElement().createVariable();
-		zero.setZero();
-		return Views.interpolate( Views.extendValue( getSource( t, level ), zero ), factory );
+		return Views.interpolate( Views.extendZero( getSource( t, level ) ), factory );
 	}
 
 	@Override

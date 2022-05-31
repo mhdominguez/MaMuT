@@ -2,7 +2,7 @@
  * #%L
  * Fiji plugin for the annotation of massive, multi-view data.
  * %%
- * Copyright (C) 2012 - 2021 MaMuT development team.
+ * Copyright (C) 2012 - 2022 MaMuT development team.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -23,13 +23,15 @@ package fiji.plugin.mamut;
 
 import java.io.File;
 
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 import fiji.plugin.mamut.io.MamutXmlReader;
-import fiji.plugin.mamut.providers.MamutEdgeAnalyzerProvider;
-import fiji.plugin.mamut.providers.MamutSpotAnalyzerProvider;
-import fiji.plugin.mamut.providers.MamutTrackAnalyzerProvider;
 import fiji.plugin.trackmate.Logger;
 import fiji.plugin.trackmate.Model;
+import fiji.plugin.trackmate.gui.displaysettings.DisplaySettings;
 import fiji.plugin.trackmate.io.IOUtils;
+import fiji.plugin.trackmate.providers.ViewProvider;
 import ij.IJ;
 import ij.ImageJ;
 import ij.plugin.PlugIn;
@@ -98,31 +100,19 @@ public class LoadMamutAnnotationPlugin implements PlugIn
 		 * Read settings
 		 */
 
-		final SourceSettings settings = new SourceSettings();
-		reader.readSettings( settings, null, null, new MamutSpotAnalyzerProvider(), new MamutEdgeAnalyzerProvider(), new MamutTrackAnalyzerProvider() );
+		final SourceSettings settings = reader.readSourceSettings();
 
 		/*
-		 * Read image source location from settings object.
+		 * Display settings.
 		 */
 
-		File imageFile = new File( settings.imageFolder, settings.imageFileName );
-		if ( !imageFile.exists() )
-		{
-			// Then try relative path
-			imageFile = new File( mamutFile.getParent(), settings.imageFileName );
-			if ( !imageFile.exists() )
-			{
-				model.getLogger().error( "Cannot find the image data file: " + settings.imageFileName
-						+ " in " + settings.imageFolder + " nor in " + mamutFile.getParent() );
-				return;
-			}
-		}
+		final DisplaySettings ds = reader.getDisplaySettings();
 
 		/*
 		 * Launch MaMuT.
 		 */
 
-		final MaMuT mamut = new MaMuT( imageFile, model, settings );
+		final MaMuT mamut = new MaMuT( model, settings, ds );
 
 		/*
 		 * Update setup assignments.
@@ -136,15 +126,31 @@ public class LoadMamutAnnotationPlugin implements PlugIn
 
 		reader.readBookmarks( mamut.getBookmarks() );
 
+		// Views
+		reader.getViews(
+				mamut,
+				new ViewProvider(),
+				model,
+				settings,
+				mamut.getSelectionModel(),
+				ds );
+
+		if ( !reader.isReadingOk() )
+		{
+			Logger.IJ_LOGGER.error( "Some errors occurred while reading file:\n" );
+			Logger.IJ_LOGGER.error( reader.getErrorMessage() );
+		}
 	}
 
-	public static void main( final String[] args )
+	public static void main( final String[] args ) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException
 	{
+		UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
 		ImageJ.main( args );
 
 		final LoadMamutAnnotationPlugin plugin = new LoadMamutAnnotationPlugin();
-		plugin.run( "D:/Users/Jean-Yves/Development/MaMuT-tutorials/MaMuT_Parhyale_demo-mamut.xml" );
-//		plugin.run( "/Users/tinevez/Desktop/Data/Mamut/parhyale/BDV130418A325_NoTempReg-mamut_JY2.xml" );
+//		plugin.run( "D:/Projects/JYTinevez/MaMuT/Mastodon-dataset/MaMuT_Parhyale_demo-mamut.xml" );
+		plugin.run( "/Users/tinevez/Projects/JYTinevez/MaMuT/Mastodon-dataset/MaMuT_Parhyale_demo-mamut.xml" );
+//		plugin.run( null );
+//		plugin.run( "/Users/tinevez/Downloads/200926_RT112_DiI_FMS_Lpbs_2dpi-mamut.xml" );
 	}
-
 }

@@ -2,7 +2,7 @@
  * #%L
  * Fiji plugin for the annotation of massive, multi-view data.
  * %%
- * Copyright (C) 2012 - 2021 MaMuT development team.
+ * Copyright (C) 2012 - 2022 MaMuT development team.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -21,9 +21,6 @@
  */
 package fiji.plugin.mamut.viewer;
 
-import bdv.viewer.OverlayRenderer;
-import bdv.viewer.render.RenderTarget;
-import bdv.viewer.render.awt.BufferedImageRenderResult;
 import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -60,10 +57,13 @@ import javax.swing.event.ChangeListener;
 import bdv.cache.CacheControl;
 import bdv.export.ProgressWriter;
 import bdv.util.Prefs;
-import bdv.viewer.SynchronizedViewerState;
+import bdv.viewer.OverlayRenderer;
 import bdv.viewer.ViewerState;
 import bdv.viewer.overlay.ScaleBarOverlayRenderer;
 import bdv.viewer.render.MultiResolutionRenderer;
+import bdv.viewer.render.RenderTarget;
+import bdv.viewer.render.awt.BufferedImageRenderResult;
+import fiji.plugin.trackmate.gui.displaysettings.DisplaySettings;
 import net.imglib2.Cursor;
 import net.imglib2.display.screenimage.awt.ARGBScreenImage;
 import net.imglib2.img.Img;
@@ -96,13 +96,13 @@ public class MamutRecordMaxProjectionDialog extends JDialog implements OverlayRe
 
 	private final JSpinner spinnerNumSteps;
 
-	private MamutZProjectedOverlay overlay;
+	private final MamutZProjectedOverlay overlay;
 
-	public MamutRecordMaxProjectionDialog( final Frame owner, final MamutViewer mv, final ProgressWriter progressWriter )
+	public MamutRecordMaxProjectionDialog( final Frame owner, final MamutViewer mv, final DisplaySettings ds, final ProgressWriter progressWriter )
 	{
 		super( owner, "record max projection movie", false );
 		this.viewer = mv.getViewerPanel();
-		this.overlay = new MamutZProjectedOverlay( mv.getModel(), mv.getSelectionModel(), mv );
+		this.overlay = new MamutZProjectedOverlay( mv.getModel(), mv.getSelectionModel(), mv, ds );
 		maxTimepoint = viewer.state().getNumTimepoints() - 1;
 		this.progressWriter = progressWriter;
 

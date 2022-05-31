@@ -2,7 +2,7 @@
  * #%L
  * Fiji plugin for the annotation of massive, multi-view data.
  * %%
- * Copyright (C) 2012 - 2021 MaMuT development team.
+ * Copyright (C) 2012 - 2022 MaMuT development team.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -150,6 +150,7 @@ public class MamutKeyboardHandler
 		return map;
 	}
 
+	@SuppressWarnings( "deprecation" )
 	protected void installKeyboardActions()
 	{
 		final InputTriggerConfig inputTriggerConfig = BigDataViewer.getInputTriggerConfig( ViewerOptions.options() );

@@ -2,7 +2,7 @@
  * #%L
  * Fiji plugin for the annotation of massive, multi-view data.
  * %%
- * Copyright (C) 2012 - 2021 MaMuT development team.
+ * Copyright (C) 2012 - 2022 MaMuT development team.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -28,6 +28,7 @@ import org.scijava.plugin.Plugin;
 import fiji.plugin.mamut.MaMuT;
 import fiji.plugin.trackmate.action.CloseGapsByLinearInterpolationAction;
 import fiji.plugin.trackmate.action.TrackMateAction;
+import fiji.plugin.trackmate.gui.Icons;
 
 @Plugin( type = MamutActionFactory.class )
 public class MamutCloseGapsFactory implements MamutActionFactory
@@ -42,7 +43,7 @@ public class MamutCloseGapsFactory implements MamutActionFactory
 	@Override
 	public ImageIcon getIcon()
 	{
-		return CloseGapsByLinearInterpolationAction.ICON;
+		return Icons.ORANGE_ASTERISK_ICON;
 	}
 
 	@Override

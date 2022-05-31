@@ -136,6 +136,10 @@
 		<!-- Fiji dependencies -->
 		<dependency>
 			<groupId>sc.fiji</groupId>
+			<artifactId>3D_Viewer</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>sc.fiji</groupId>
 			<artifactId>TrackMate</artifactId>
 			<version>7.6.1</version>
 		</dependency>

@@ -13,7 +13,7 @@ import org.scijava.vecmath.Color3f;
 import fiji.plugin.trackmate.Model;
 import fiji.plugin.trackmate.SelectionModel;
 import fiji.plugin.trackmate.Settings;
-import fiji.plugin.trackmate.gui.TrackMateWizard;
+import static fiji.plugin.trackmate.gui.Icons.TRACKMATE_ICON;
 import fiji.plugin.trackmate.visualization.TrackMateModelView;
 import fiji.plugin.trackmate.visualization.ViewFactory;
 import ij.IJ;
@@ -55,7 +55,7 @@ public class SpotDisplayer3DFactory implements ViewFactory
 	{
 		final Image3DUniverse universe = new Image3DUniverse();
 		final ImageWindow3D win = new ImageWindow3D( "TrackMate 3D Viewer", universe );
-		win.setIconImage( TrackMateWizard.TRACKMATE_ICON.getImage() );
+		win.setIconImage( TRACKMATE_ICON.getImage() );
 		universe.init( win );
 		win.pack();
 		win.setVisible( true );

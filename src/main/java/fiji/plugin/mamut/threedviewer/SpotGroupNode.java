@@ -1,6 +1,6 @@
 package fiji.plugin.mamut.threedviewer;
 
-import static fiji.plugin.trackmate.gui.TrackMateWizard.FONT;
+import static fiji.plugin.trackmate.gui.wizard.WizardPanel.FONT;
 
 import java.util.ArrayList;
 import java.util.BitSet;

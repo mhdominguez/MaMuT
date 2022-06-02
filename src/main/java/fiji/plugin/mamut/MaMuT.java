@@ -68,6 +68,7 @@ import fiji.plugin.mamut.detection.SourceSemiAutoTracker;
 import fiji.plugin.mamut.feature.MamutModelFeatureUpdater;
 import fiji.plugin.mamut.feature.spot.SpotSourceIdAnalyzerFactory;
 import fiji.plugin.mamut.gui.AnnotationPanel;
+import fiji.plugin.mamut.gui.MamutControlPanel;
 import fiji.plugin.mamut.gui.MamutGUI;
 import fiji.plugin.mamut.gui.MamutGUIModel;
 import fiji.plugin.mamut.gui.MamutKeyboardHandler;
@@ -945,7 +946,6 @@ public class MaMuT implements ModelChangeListener
 	
 	public void launch3DViewer( )
 	{
-		button.setEnabled( false );
 		new Thread( "MaMuT new 3D viewer thread" )
 		{
 			@Override
@@ -959,15 +959,9 @@ public class MaMuT implements ModelChangeListener
 				win.setLocationByPlatform( true );
 				win.setVisible( true );
 
-				// universe.show();
-				final SpotDisplayer3D newDisplayer = new SpotDisplayer3D( model, selectionModel, universe );
-				for ( final String key : guimodel.getDisplaySettings().keySet() )
-				{
-					newDisplayer.setDisplaySettings( key, guimodel.getDisplaySettings().get( key ) );
-				}
+				final SpotDisplayer3D newDisplayer = new SpotDisplayer3D( model, selectionModel, universe, ds );
 				guimodel.addView( newDisplayer );
 				newDisplayer.render();
-				button.setEnabled( true );
 			}
 		}.start();
 	}

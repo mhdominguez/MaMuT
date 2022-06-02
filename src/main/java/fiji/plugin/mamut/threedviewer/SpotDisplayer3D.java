@@ -26,11 +26,15 @@ import fiji.plugin.trackmate.util.TMUtils;
 import fiji.plugin.trackmate.visualization.AbstractTrackMateModelView;
 import fiji.plugin.trackmate.visualization.FeatureColorGenerator;
 import fiji.plugin.trackmate.visualization.TrackColorGenerator;
-import fiji.plugin.trackmate.visualization.TrackMateModelView;
+import fiji.plugin.trackmate.features.FeatureUtils;
+import fiji.plugin.trackmate.gui.displaysettings.DisplaySettings;
+import fiji.plugin.trackmate.gui.displaysettings.DisplaySettings.TrackDisplayMode;
+import fiji.plugin.trackmate.visualization.FeatureColorGenerator;
 import fiji.util.gui.GenericDialogPlus;
 import ij3d.Content;
 import ij3d.ContentInstant;
 import ij3d.Image3DUniverse;
+import fiji.plugin.trackmate.gui.displaysettings.DisplaySettings;
 
 public class SpotDisplayer3D extends AbstractTrackMateModelView
 {
@@ -105,13 +109,14 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 		options[OPTION_USE_ICOSPHERES] = dialog.getNextBoolean();
 	}	
 
-	public SpotDisplayer3D( final Model model, final SelectionModel selectionModel, final Image3DUniverse universe )
+	public SpotDisplayer3D( final Model model, final SelectionModel selectionModel, final Image3DUniverse universe, final DisplaySettings ds )
 	{
 		super( model, selectionModel );
 		
 		showOptionsDialog();		
 		this.universe = universe;
 		setModel( model );
+		this.displaySettings = ds;
 	}
 
 	/*
@@ -185,7 +190,7 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 		trackNode.setSelection( selectionModel.getEdgeSelection() );
 		trackNode.refresh();
 		// Highlight spots.
-		displaySpotSelection( ( Integer ) displaySettings.get( KEY_TRACK_DISPLAY_MODE ) == TrackMateModelView.TRACK_DISPLAY_MODE_SELECTION_ONLY );
+		displaySpotSelection( displaySettings.getTrackDisplayMode() == TrackDisplayMode.SELECTION_ONLY );
 		// Center on last spot
 		super.selectionChanged( event );
 	}
@@ -212,15 +217,15 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 
 		updateRadiuses();
 		updateSpotColors();
-		spotContent.setVisible( ( Boolean ) displaySettings.get( KEY_SPOTS_VISIBLE ) );
+		spotContent.setVisible( displaySettings.isSpotVisible() );
 		
 		//System.out.println( "[SpotDisplayer3D] Call to render(A)." );
 		
 		if ( null != trackContent )
 		{
-			trackContent.setVisible( ( Boolean ) displaySettings.get( KEY_TRACKS_VISIBLE ) );
-			trackNode.setTrackDisplayMode( ( Integer ) displaySettings.get( KEY_TRACK_DISPLAY_MODE ) );
-			trackNode.setTrackDisplayDepth( ( Integer ) displaySettings.get( KEY_TRACK_DISPLAY_DEPTH ) );
+			trackContent.setVisible( displaySettings.isTrackVisible() );
+			trackNode.setTrackDisplayMode( displaySettings.getTrackDisplayMode() );
+			trackNode.setTrackDisplayDepth( displaySettings.getFadeTrackRange() );
 			updateTrackColors();
 			//System.out.println( "[SpotDisplayer3D] Call to render(B)." );
 			trackNode.refresh();
@@ -230,7 +235,7 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 		
 		//System.out.println( "[SpotDisplayer3D] Call to render(C)." );
 	}
-
+/*
 	@Override
 	public void setDisplaySettings( final String key, final Object value )
 	{
@@ -273,7 +278,7 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 			trackNode.setTrackDisplayDepth( ( Integer ) value );
 		}
 	}
-
+*/
 	@Override
 	public void clear()
 	{
@@ -327,10 +332,11 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 
 		blobs = new TreeMap<>();
 		contentAllFrames = new TreeMap< >();
-		final double radiusRatio = ( Double ) displaySettings.get( KEY_SPOT_RADIUS_RATIO );
+		final double radiusRatio = displaySettings.getSpotDisplayRadius();
 		final SpotCollection spots = model.getSpots();
-		@SuppressWarnings( "unchecked" )
-		final FeatureColorGenerator< Spot > spotColorGenerator = ( FeatureColorGenerator< Spot > ) displaySettings.get( KEY_SPOT_COLORING );
+		//@SuppressWarnings( "unchecked" )
+		//final FeatureColorGenerator< Spot > spotColorGenerator = ( FeatureColorGenerator< Spot > ) displaySettings.get( KEY_SPOT_COLORING );
+		final FeatureColorGenerator< Spot > spotColorGenerator = FeatureUtils.createSpotColorGenerator( model, displaySettings );
 
 		for ( final int frame : spots.keySet() )
 		{
@@ -388,7 +394,7 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 
 	private void updateRadiuses()
 	{
-		final double radiusRatio = ( Double ) displaySettings.get( KEY_SPOT_RADIUS_RATIO );
+		final double radiusRatio = displaySettings.getSpotDisplayRadius();
 
 		for ( final int frame : blobs.keySet() )
 		{
@@ -403,8 +409,9 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 
 	private void updateSpotColors()
 	{
-		@SuppressWarnings( "unchecked" )
-		final FeatureColorGenerator< Spot > spotColorGenerator = ( FeatureColorGenerator< Spot > ) displaySettings.get( KEY_SPOT_COLORING );
+		//@SuppressWarnings( "unchecked" )
+		//final FeatureColorGenerator< Spot > spotColorGenerator = ( FeatureColorGenerator< Spot > ) displaySettings.get( KEY_SPOT_COLORING );
+		final FeatureColorGenerator< Spot > spotColorGenerator = FeatureUtils.createSpotColorGenerator( model, displaySettings );
 
 		for ( final int frame : blobs.keySet() )
 		{

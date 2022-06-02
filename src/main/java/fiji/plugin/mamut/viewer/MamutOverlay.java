@@ -96,7 +96,7 @@ public class MamutOverlay
 		final int trackDisplayDepth = ds.getFadeTrackRange();
 		final boolean tracksVisible = ds.isTrackVisible();
 		final double radiusRatio = ds.getSpotDisplayRadius();
-		final boolean drawCellTriangles = ( Boolean ) ( ds.isSpotVisible() && tracksVisible && trackDisplayDepth > 0 && trackDisplayDepth < 1_000_000_000 && trackDisplayMode == TrackMateModelView.TRACK_DISPLAY_MODE_LOCAL );
+		final boolean drawCellTriangles = ( Boolean ) ( ds.isSpotVisible() && tracksVisible && trackDisplayDepth > 0 && trackDisplayDepth < 1_000_000_000 && trackDisplayMode == TrackDisplayMode.LOCAL );
 		final boolean doDisplayNames = ds.isSpotShowName();
 		final Stroke normalStroke = new BasicStroke( ( float ) ds.getLineThickness() );
 		final Stroke selectionStroke = new BasicStroke( ( float ) ds.getSelectionLineThickness() );
@@ -342,7 +342,7 @@ public class MamutOverlay
 							transform.apply( globalCoords, localEnd );
 							
 							//set color							
-							if ( selectionModel.getSpotSelection().contains( spot ) && trackDisplayMode != TrackDisplayMode.SELECTION_ONLY )
+							if ( selectionModel.getSpotSelection().contains( source ) && trackDisplayMode != TrackDisplayMode.SELECTION_ONLY )
 							{
 								Stroke stroke;
 								forceDraw = true; // Selection is drawn unconditionally.
@@ -352,7 +352,7 @@ public class MamutOverlay
 							}
 							else
 							{
-								color = spotColorGenerator.color( spot );
+								color = spotColorGenerator.color( source );
 							}
 						
 							//now, draw triangle as established above

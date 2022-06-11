@@ -365,8 +365,8 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 			}
 			break;
 		}
-		}
-*/
+*/		}
+
 		// Deal now with selection
 		if ( ( null != edgeSelection ) && ( displayMode != TrackDisplayMode.SELECTION_ONLY ) )
 		{

@@ -34,7 +34,6 @@ import fiji.util.gui.GenericDialogPlus;
 import ij3d.Content;
 import ij3d.ContentInstant;
 import ij3d.Image3DUniverse;
-import fiji.plugin.trackmate.gui.displaysettings.DisplaySettings;
 
 public class SpotDisplayer3D extends AbstractTrackMateModelView
 {
@@ -312,7 +311,7 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 	private Content makeTrackContent( boolean processTracks )
 	{
 		// Prepare tracks instant
-		trackNode = new TrackDisplayNode( model );
+		trackNode = new TrackDisplayNode( model, displaySettings );
 		if ( processTracks )
 			universe.addTimelapseListener( trackNode );
 
@@ -460,8 +459,9 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 		 * Don't color spot selection in the highlight color if we are
 		 * displaying selection only.
 		 */
-		final Integer trackDisplayMode = ( Integer ) displaySettings.get( KEY_TRACK_DISPLAY_MODE );
-		if ( trackDisplayMode == TrackMateModelView.TRACK_DISPLAY_MODE_SELECTION_ONLY )
+
+		final TrackDisplayMode trackDisplayMode = displaySettings.getTrackDisplayMode();
+		if ( trackDisplayMode == TrackDisplayMode.SELECTION_ONLY )
 			return;
 
 		/*
@@ -473,7 +473,7 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 		previousColorHighlight = new HashMap< >( spots.size() );
 		previousFrameHighlight = new HashMap< >( spots.size() );
 
-		final Color3f highlightColor = new Color3f( ( Color ) displaySettings.get( KEY_HIGHLIGHT_COLOR ) );
+		final Color3f highlightColor = new Color3f( displaySettings.getHighlightColor() );
 		for ( final Spot spot : spots )
 		{
 			final int frame = spot.getFeature( Spot.FRAME ).intValue();

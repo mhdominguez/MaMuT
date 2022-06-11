@@ -66,7 +66,7 @@ public class MamutControlPanel extends JPanel
 	private static final long serialVersionUID = 1L;
 
 	private static final ImageIcon MAMUT_ICON = new ImageIcon( MaMuT.class.getResource( "mammouth-16x16.png" ) );
-	private static final ImageIcon THREEDVIEWER_ICON = new ImageIcon( MaMuT.class.getResource( "sport_8ball.png" ) );
+	public static final ImageIcon THREEDVIEWER_ICON = new ImageIcon( MaMuT.class.getResource( "sport_8ball.png" ) );
 	private static final ImageIcon SAVE_ICON = new ImageIcon( MaMuT.class.getResource( "page_save.png" ) );
 	private static final Color BORDER_COLOR = new java.awt.Color( 192, 192, 192 );
 	private static final String TRACK_TABLES_BUTTON_TOOLTIP = "<html>"

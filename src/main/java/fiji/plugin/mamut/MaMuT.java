@@ -960,7 +960,7 @@ public class MaMuT implements ModelChangeListener
 				win.setVisible( true );
 
 				final SpotDisplayer3D newDisplayer = new SpotDisplayer3D( model, selectionModel, universe, ds );
-				guimodel.addView( newDisplayer );
+				guimodel.views.add( newDisplayer );
 				newDisplayer.render();
 			}
 		}.start();

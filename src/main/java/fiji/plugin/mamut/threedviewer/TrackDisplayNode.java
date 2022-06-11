@@ -30,11 +30,15 @@ import fiji.plugin.trackmate.Model;
 import fiji.plugin.trackmate.Spot;
 import fiji.plugin.trackmate.util.TMUtils;
 import fiji.plugin.trackmate.visualization.TrackMateModelView;
+import fiji.plugin.trackmate.gui.displaysettings.DisplaySettings;
+import fiji.plugin.trackmate.gui.displaysettings.DisplaySettings.TrackDisplayMode;
 import ij3d.ContentNode;
 import ij3d.TimelapseListener;
 
 public class TrackDisplayNode extends ContentNode implements TimelapseListener
 {
+
+	protected final DisplaySettings ds;
 
 	/** The model, needed to retrieve connectivity. */
 	private final Model model;
@@ -42,11 +46,12 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 	/** Hold the color and transparency of all spots for a given track. */
 	private final HashMap< Integer, Color > colors = new HashMap< >();
 
-	private int displayDepth = TrackMateModelView.DEFAULT_TRACK_DISPLAY_DEPTH;
-
-	private int displayMode = TrackMateModelView.DEFAULT_TRACK_DISPLAY_MODE;
+	private final TrackDisplayMode trackDisplayMode = ds.getTrackDisplayMode();
 
 	private int currentTimePoint = 0;
+
+	public static final Color DEFAULT_SPOT_COLOR = new Color( 1f, 0, 1f );
+	public static final Color DEFAULT_HIGHLIGHT_COLOR = new Color( 0, 1f, 0 );
 
 	/**
 	 * Reference for each frame, then for each track, the line primitive indices
@@ -98,13 +103,14 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 	 * CONSTRUCTOR
 	 */
 
-	public TrackDisplayNode( final Model model )
+	public TrackDisplayNode( final Model model, final DisplaySettings ds )
 	{
 		this.model = model;
 		setCapability( ALLOW_CHILDREN_WRITE );
 		setCapability( ALLOW_CHILDREN_EXTEND );
 		makeMeshes();
 		setTrackVisible( model.getTrackModel().trackIDs( true ) );
+		this.ds = ds;
 	}
 
 	/*
@@ -125,45 +131,21 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 		}
 		trackSwitch.setChildMask( switchMask );
 	}
-
-	public void setTrackDisplayMode( final int mode )
-	{
-		this.displayMode = mode;
-		if ( displayMode == TrackMateModelView.TRACK_DISPLAY_MODE_WHOLE )
-		{
-			final Color4f color = new Color4f();
-			for ( final Integer trackID : lines.keySet() )
-			{
-				final LineArray line = lines.get( trackID );
-
-				for ( int i = 0; i < line.getVertexCount(); i++ )
-				{
-					line.getColor( i, color );
-					color.w = 1f;
-					line.setColor( i, color );
-				}
-			}
-		}
-	}
-
-	public void setTrackDisplayDepth( final int displayDepth )
-	{
-		this.displayDepth = displayDepth;
-	}
-
 	void refresh()
 	{
 		// Holder for passing values
 		final Color4f color = new Color4f();
+		final TrackDisplayMode displayMode = ds.getTrackDisplayMode();
+
 		switch ( displayMode )
 		{
 
-		case TrackMateModelView.TRACK_DISPLAY_MODE_WHOLE:
+		case FULL:
 		{
 			break;
 		}
 
-		case TrackMateModelView.TRACK_DISPLAY_MODE_SELECTION_ONLY:
+		case SELECTION_ONLY:
 		{
 			if ( null == edgeSelection )
 				break;
@@ -196,10 +178,10 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 				final int frame = model.getTrackModel().getEdgeSource( edge ).getFeature( Spot.FRAME ).intValue();
 				final int frameDist = Math.abs( frame  - currentTimePoint );
 				float tp;
-				if ( frameDist > displayDepth )
+				if ( frameDist > ds.getFadeTrackRange() )
 					tp = 0f;
 				else
-					tp = 1f - ( float ) frameDist / displayDepth;
+					tp = 1f - ( float ) frameDist / ds.getFadeTrackRange();
 
 				line.getColor( index, color );
 				color.w = tp;
@@ -210,17 +192,17 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 			break;
 		}
 
-		case TrackMateModelView.TRACK_DISPLAY_MODE_LOCAL:
+		case LOCAL:
 		{
 			float tp;
 			int frameDist;
 			for ( final int frame : frameIndices.keySet() )
 			{
 				frameDist = Math.abs( frame - currentTimePoint );
-				if ( frameDist > displayDepth )
+				if ( frameDist > ds.getFadeTrackRange() )
 					tp = 0f;
 				else
-					tp = 1f - ( float ) frameDist / displayDepth;
+					tp = 1f - ( float ) frameDist / ds.getFadeTrackRange();
 
 				for ( final Integer trackID : lines.keySet() )
 				{
@@ -236,7 +218,7 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 			}
 			break;
 		}
-
+/*
 		case TrackMateModelView.TRACK_DISPLAY_MODE_LOCAL_QUICK:
 		{
 			float tp;
@@ -244,7 +226,7 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 			for ( final int frame : frameIndices.keySet() )
 			{
 				frameDist = Math.abs( frame - currentTimePoint );
-				if ( frameDist > displayDepth )
+				if ( frameDist > ds.getFadeTrackRange() )
 					tp = 0f;
 				else
 					tp = 1f;
@@ -263,18 +245,18 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 			}
 			break;
 		}
-
-		case TrackMateModelView.TRACK_DISPLAY_MODE_LOCAL_BACKWARD:
+*/
+		case LOCAL_BACKWARD:
 		{
 			float tp;
 			int frameDist;
 			for ( final int frame : frameIndices.keySet() )
 			{
 				frameDist = currentTimePoint - frame;
-				if ( frameDist <= 0 || frameDist > displayDepth )
+				if ( frameDist <= 0 || frameDist > ds.getFadeTrackRange() )
 					tp = 0f;
 				else
-					tp = 1f - ( float ) frameDist / displayDepth;
+					tp = 1f - ( float ) frameDist / ds.getFadeTrackRange();
 
 				for ( final Integer trackID : lines.keySet() )
 				{
@@ -290,7 +272,7 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 			}
 			break;
 		}
-
+/*
 		case TrackMateModelView.TRACK_DISPLAY_MODE_LOCAL_BACKWARD_QUICK:
 		{
 			float tp;
@@ -298,7 +280,7 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 			for ( final int frame : frameIndices.keySet() )
 			{
 				frameDist = currentTimePoint - frame;
-				if ( frameDist <= 0 || frameDist > displayDepth )
+				if ( frameDist <= 0 || frameDist > ds.getFadeTrackRange() )
 					tp = 0f;
 				else
 					tp = 1f;
@@ -321,18 +303,18 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 			}
 			break;
 		}
-
-		case TrackMateModelView.TRACK_DISPLAY_MODE_LOCAL_FORWARD:
+*/
+		case LOCAL_FORWARD:
 		{
 			float tp;
 			int frameDist;
 			for ( final int frame : frameIndices.keySet() )
 			{
 				frameDist = frame - currentTimePoint;
-				if ( frameDist < 0 || frameDist > displayDepth )
+				if ( frameDist < 0 || frameDist > ds.getFadeTrackRange() )
 					tp = 0f;
 				else
-					tp = 1f - ( float ) frameDist / displayDepth;
+					tp = 1f - ( float ) frameDist / ds.getFadeTrackRange();
 
 				for ( final Integer trackID : lines.keySet() )
 				{
@@ -352,7 +334,7 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 			}
 			break;
 		}
-
+/*
 		case TrackMateModelView.TRACK_DISPLAY_MODE_LOCAL_FORWARD_QUICK:
 		{
 			float tp;
@@ -360,7 +342,7 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 			for ( final int frame : frameIndices.keySet() )
 			{
 				frameDist = frame - currentTimePoint;
-				if ( frameDist < 0 || frameDist > displayDepth )
+				if ( frameDist < 0 || frameDist > ds.getFadeTrackRange() )
 					tp = 0f;
 				else
 					tp = 1f;
@@ -384,9 +366,9 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 			break;
 		}
 		}
-
+*/
 		// Deal now with selection
-		if ( ( null != edgeSelection ) && ( displayMode != TrackMateModelView.TRACK_DISPLAY_MODE_SELECTION_ONLY ) )
+		if ( ( null != edgeSelection ) && ( displayMode != TrackDisplayMode.SELECTION_ONLY ) )
 		{
 			// Restore previous display settings for previously highlighted
 			// edges
@@ -400,7 +382,7 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 				previousEdgeHighlight.put( edge, getColor( edge ) );
 
 			// Change edge color
-			final Color highlightColor = TrackMateModelView.DEFAULT_HIGHLIGHT_COLOR;
+			final Color highlightColor = ds.getHighlightColor();
 			for ( final DefaultWeightedEdge edge : edgeSelection )
 				setColor( edge, highlightColor );
 		}
@@ -522,6 +504,7 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 
 			// Color
 			Color trackColor = colors.get( trackID );
+
 			if ( null == trackColor )
 			{
 				trackColor = TrackMateModelView.DEFAULT_SPOT_COLOR;

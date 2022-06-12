@@ -507,8 +507,8 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 			line.setCapability( GeometryArray.ALLOW_COLOR_WRITE );
 
 			// Color
-			Color trackColor = colors.get( trackID );
-			/*
+			/*Color trackColor = colors.get( trackID );
+
 			if ( null == trackColor )
 			{
 				trackColor = TrackMateModelView.DEFAULT_SPOT_COLOR;
@@ -524,10 +524,10 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 				final Spot target = model.getTrackModel().getEdgeTarget( edge );
 				final Spot source = model.getTrackModel().getEdgeSource( edge );
 
-				final Color color = trackColorGenerator.color( edge );
-				trackColor[0] = color.getRed() / 255f;
-				trackColor[1] = color.getGreen() / 255f;
-				trackColor[2] = color.getBlue() / 255f;
+				// Set color
+				final Color trackColor = trackColorGenerator.color( edge );
+				final Color4f color = new Color4f( trackColor );
+				color.w = 1f; // opaque edge for now
 
 				// Add coords and colors of each vertex
 				coordinates = new double[ 3 ];

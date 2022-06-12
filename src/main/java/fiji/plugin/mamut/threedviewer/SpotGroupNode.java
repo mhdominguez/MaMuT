@@ -53,7 +53,7 @@ public class SpotGroupNode< K > extends ContentNode
 
 	private final LineAttributes lineAttributes = new LineAttributes( 1, 1, true );
 
-	private final Color3f color3 = new Color3f( TrackMateModelView.DEFAULT_SPOT_COLOR );
+	private final Color3f color3 = new Color3f( 1f, 0, 1f ); //( TrackMateModelView.DEFAULT_SPOT_COLOR );
 
 	{
 		textAp.setLineAttributes( lineAttributes );

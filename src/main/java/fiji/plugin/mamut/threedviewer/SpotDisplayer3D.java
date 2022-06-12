@@ -145,7 +145,7 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 				for ( final Iterator< Spot > it = model.getSpots().iterator( frame, false ); it.hasNext(); )
 				{
 					final Spot spot = it.next();
-					final boolean visible = spot.getFeature( SpotCollection.VISIBLITY ).compareTo( SpotCollection.ZERO ) > 0;
+					final boolean visible = spot.getFeature( SpotCollection.VISIBILITY ).compareTo( SpotCollection.ZERO ) > 0;
 					frameBlobs.setVisible( spot, visible );
 				}
 			}
@@ -425,7 +425,8 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 
 	private void updateTrackColors()
 	{
-		final TrackColorGenerator colorGenerator = ( TrackColorGenerator ) displaySettings.get( KEY_TRACK_COLORING );
+		//final TrackColorGenerator colorGenerator = ( TrackColorGenerator ) displaySettings.get( KEY_TRACK_COLORING );
+		final FeatureColorGenerator< DefaultWeightedEdge > colorGenerator = FeatureUtils.createTrackColorGenerator( model, displaySettings );
 
 		for ( final Integer trackID : model.getTrackModel().trackIDs( true ) )
 		{

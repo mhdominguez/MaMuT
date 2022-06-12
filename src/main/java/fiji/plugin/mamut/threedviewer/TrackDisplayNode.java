@@ -32,6 +32,7 @@ import fiji.plugin.trackmate.util.TMUtils;
 import fiji.plugin.trackmate.visualization.TrackMateModelView;
 import fiji.plugin.trackmate.gui.displaysettings.DisplaySettings;
 import fiji.plugin.trackmate.gui.displaysettings.DisplaySettings.TrackDisplayMode;
+import fiji.plugin.trackmate.features.FeatureUtils;
 import ij3d.ContentNode;
 import ij3d.TimelapseListener;
 
@@ -106,11 +107,11 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 	public TrackDisplayNode( final Model model, final DisplaySettings ds )
 	{
 		this.model = model;
+		this.ds = ds;
 		setCapability( ALLOW_CHILDREN_WRITE );
 		setCapability( ALLOW_CHILDREN_EXTEND );
 		makeMeshes();
 		setTrackVisible( model.getTrackModel().trackIDs( true ) );
-		this.ds = ds;
 	}
 
 	/*
@@ -445,6 +446,8 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 
 	protected void makeMeshes()
 	{
+		// Common display stuff
+		final FeatureColorGenerator< DefaultWeightedEdge > trackColorGenerator = FeatureUtils.createTrackColorGenerator( model, ds );
 
 		this.trackSwitch = new Switch( Switch.CHILD_MASK );
 		trackSwitch.setCapability( Switch.ALLOW_SWITCH_WRITE );
@@ -503,14 +506,14 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 			line.setCapability( GeometryArray.ALLOW_COLOR_WRITE );
 
 			// Color
-			Color trackColor = colors.get( trackID );
+			/* Color trackColor = colors.get( trackID );
 
 			if ( null == trackColor )
 			{
 				trackColor = TrackMateModelView.DEFAULT_SPOT_COLOR;
 			}
 			final Color4f color = new Color4f( trackColor );
-			color.w = 1f; // opaque edge for now
+			color.w = 1f; // opaque edge for now */
 
 			// Iterate over track edge
 			int edgeIndex = 0;
@@ -519,6 +522,9 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 				// Find source and target
 				final Spot target = model.getTrackModel().getEdgeTarget( edge );
 				final Spot source = model.getTrackModel().getEdgeSource( edge );
+
+				final Color4f color = trackColorGenerator.color( edge );
+				drawEdge( g, source, target, transform, 1f, doLimitDrawingDepth, drawingDepth );
 
 				// Add coords and colors of each vertex
 				coordinates = new double[ 3 ];

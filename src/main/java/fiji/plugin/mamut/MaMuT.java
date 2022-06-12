@@ -807,6 +807,8 @@ public class MaMuT implements ModelChangeListener
 			for ( final TrackMateModelView view : guimodel.views )
 				if ( view instanceof MamutViewer )
 					( ( MamutViewer ) view ).getViewerPanel().requestRepaint();
+				else if ( view instanceof SpotDisplayer3D )
+					( ( SpotDisplayer3D ) view ).render();
 	}
 
 	/**

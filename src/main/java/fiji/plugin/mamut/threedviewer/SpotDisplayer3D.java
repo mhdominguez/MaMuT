@@ -210,7 +210,7 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 	@Override
 	public void render()
 	{
-		if ( DEBUG )
+		//if ( DEBUG )
 			System.out.println( "[SpotDisplayer3D] Call to render()." );
 
 		updateRadiuses();

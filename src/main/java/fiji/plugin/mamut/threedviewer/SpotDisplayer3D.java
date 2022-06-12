@@ -110,12 +110,11 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 
 	public SpotDisplayer3D( final Model model, final SelectionModel selectionModel, final Image3DUniverse universe, final DisplaySettings ds )
 	{
-		super( model, selectionModel );
+		super( model, selectionModel, ds );
 		
 		showOptionsDialog();		
 		this.universe = universe;
 		setModel( model );
-		this.displaySettings = ds;
 	}
 
 	/*

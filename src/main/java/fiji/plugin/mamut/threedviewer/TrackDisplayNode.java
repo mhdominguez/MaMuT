@@ -48,7 +48,7 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 	/** Hold the color and transparency of all spots for a given track. */
 	private final HashMap< Integer, Color > colors = new HashMap< >();
 
-	private final TrackDisplayMode trackDisplayMode = ds.getTrackDisplayMode();
+	private TrackDisplayMode trackDisplayMode;
 
 	private int currentTimePoint = 0;
 
@@ -109,6 +109,7 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 	{
 		this.model = model;
 		this.ds = ds;
+		trackDisplayMode = ds.getTrackDisplayMode();
 		setCapability( ALLOW_CHILDREN_WRITE );
 		setCapability( ALLOW_CHILDREN_EXTEND );
 		makeMeshes();

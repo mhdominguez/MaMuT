@@ -524,7 +524,7 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 				final Spot target = model.getTrackModel().getEdgeTarget( edge );
 				final Spot source = model.getTrackModel().getEdgeSource( edge );
 
-				final Color4f color = trackColorGenerator.color( edge );
+				final Color4f color = ( Color4f ) trackColorGenerator.color( edge );
 
 				// Add coords and colors of each vertex
 				coordinates = new double[ 3 ];

@@ -383,9 +383,9 @@ public class MamutControlPanel extends JPanel
 		
 		// 3d viewer button
 		final JButton btnMamut3DViewer = new JButton( "3D Viewer", THREEDVIEWER_ICON );
-		btnMamutViewer.addActionListener( launchMamut3DViewerAction );
+		btnMamut3DViewer.addActionListener( launchMamut3DViewerAction );
 		panelButtons.add( btnMamut3DViewer );
-		btnMamutViewer.setFont( FONT );
+		btnMamut3DViewer.setFont( FONT );
 
 		final GridBagConstraints gbcPanelButtons = new GridBagConstraints();
 		gbcPanelButtons.gridwidth = 2;

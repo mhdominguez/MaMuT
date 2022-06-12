@@ -222,8 +222,8 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 		if ( null != trackContent )
 		{
 			trackContent.setVisible( displaySettings.isTrackVisible() );
-			trackNode.setTrackDisplayMode( displaySettings.getTrackDisplayMode() );
-			trackNode.setTrackDisplayDepth( displaySettings.getFadeTrackRange() );
+			//trackNode.setTrackDisplayMode( displaySettings.getTrackDisplayMode() );
+			//trackNode.setTrackDisplayDepth( displaySettings.getFadeTrackRange() );
 			updateTrackColors();
 			//System.out.println( "[SpotDisplayer3D] Call to render(B)." );
 			trackNode.refresh();
@@ -429,7 +429,7 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 
 		for ( final Integer trackID : model.getTrackModel().trackIDs( true ) )
 		{
-			colorGenerator.setCurrentTrackID( trackID );
+			//colorGenerator.setCurrentTrackID( trackID );
 			for ( final DefaultWeightedEdge edge : model.getTrackModel().trackEdges( trackID ) )
 			{
 				final Color color = colorGenerator.color( edge );

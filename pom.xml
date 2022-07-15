@@ -11,7 +11,7 @@
 
 	<groupId>sc.fiji</groupId>
 	<artifactId>MaMuT</artifactId>
-	<version>7.0.5-SNAPSHOT</version>
+	<version>7.0.6-SNAPSHOT</version>
 
 	<name>MaMuT</name>
 	<description>Fiji plugin for the annotation of massive, multi-view data.</description>
@@ -141,7 +141,7 @@
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>TrackMate</artifactId>
-			<version>7.6.1</version>
+			<version>7.7.1</version>
 		</dependency>
 
 		<!-- ImageJ dependencies -->

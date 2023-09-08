@@ -2,7 +2,7 @@
  * #%L
  * Fiji plugin for the annotation of massive, multi-view data.
  * %%
- * Copyright (C) 2012 - 2022 MaMuT development team.
+ * Copyright (C) 2012 - 2023 MaMuT development team.
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -25,6 +25,7 @@ import static fiji.plugin.trackmate.gui.Fonts.FONT;
 import static fiji.plugin.trackmate.gui.Icons.EXECUTE_ICON;
 
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -53,6 +54,9 @@ public class MamutActionChooserPanel extends ModuleChooserPanel< MamutActionFact
 	public MamutActionChooserPanel( final MamutActionProvider actionProvider, final MaMuT mamut, final TrackMate trackmate, final SelectionModel selectionModel, final DisplaySettings displaySettings )
 	{
 		super( actionProvider, "action", CaptureOverlayAction.KEY );
+		final GridBagLayout gridBagLayout = ( GridBagLayout ) getLayout();
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 1.0, 1.0, 0.0 };
+		gridBagLayout.rowHeights = new int[] { 0, 0, 110, 0, 0 };
 
 		final LogPanel logPanel = new LogPanel();
 		final GridBagConstraints gbcLogPanel = new GridBagConstraints();

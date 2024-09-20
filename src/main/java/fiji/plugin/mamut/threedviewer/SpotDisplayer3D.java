@@ -22,7 +22,6 @@ import fiji.plugin.trackmate.SelectionChangeEvent;
 import fiji.plugin.trackmate.SelectionModel;
 import fiji.plugin.trackmate.Spot;
 import fiji.plugin.trackmate.SpotCollection;
-import fiji.plugin.trackmate.util.TMUtils;
 import fiji.plugin.trackmate.visualization.AbstractTrackMateModelView;
 import fiji.plugin.trackmate.visualization.FeatureColorGenerator;
 import fiji.plugin.trackmate.visualization.TrackColorGenerator;
@@ -360,7 +359,7 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 		for ( final Iterator< Spot > it = spots.iterator( frame, false ); it.hasNext(); )
 		{
 			final Spot spot = it.next();
-			TMUtils.localize( spot, coords );
+			localize( spot, coords );
 			final Double radius = spot.getFeature( Spot.RADIUS );
 			final double[] pos = new double[] { coords[ 0 ], coords[ 1 ], coords[ 2 ], radius * radiusRatio };
 			centers.put( spot, new Point4d( pos ) );
@@ -488,6 +487,17 @@ public class SpotDisplayer3D extends AbstractTrackMateModelView
 				blobs.get( frame ).setColor( spot, highlightColor );
 			}
 		}
+	}
+	
+	/**
+	 * Store the x, y, z coordinates of the specified spot in the first 3
+	 * elements of the specified double array.
+	 */
+	private static final void localize( final Spot spot, final double[] coords )
+	{
+		coords[ 0 ] = spot.getFeature( Spot.POSITION_X ).doubleValue();
+		coords[ 1 ] = spot.getFeature( Spot.POSITION_Y ).doubleValue();
+		coords[ 2 ] = spot.getFeature( Spot.POSITION_Z ).doubleValue();
 	}
 
 	/**

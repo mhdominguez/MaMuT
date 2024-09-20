@@ -28,7 +28,6 @@ import org.scijava.vecmath.Tuple3d;
 
 import fiji.plugin.trackmate.Model;
 import fiji.plugin.trackmate.Spot;
-import fiji.plugin.trackmate.util.TMUtils;
 import fiji.plugin.trackmate.visualization.TrackMateModelView;
 import fiji.plugin.trackmate.gui.displaysettings.DisplaySettings;
 import fiji.plugin.trackmate.gui.displaysettings.DisplaySettings.TrackDisplayMode;
@@ -532,12 +531,12 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 
 				// Add coords and colors of each vertex
 				coordinates = new double[ 3 ];
-				TMUtils.localize( source, coordinates );
+				localize( source, coordinates );
 				line.setCoordinate( edgeIndex, coordinates );
 				line.setColor( edgeIndex, color );
 				edgeIndex++;
 				coordinates = new double[ 3 ];
-				TMUtils.localize( target, coordinates );
+				localize( target, coordinates );
 				line.setCoordinate( edgeIndex, coordinates );
 				line.setColor( edgeIndex, color );
 				edgeIndex++;
@@ -565,6 +564,17 @@ public class TrackDisplayNode extends ContentNode implements TimelapseListener
 		branchGroup.setCapability( BranchGroup.ALLOW_DETACH );
 		branchGroup.addChild( trackSwitch );
 		addChild( branchGroup );
+	}
+	
+	/**
+	 * Store the x, y, z coordinates of the specified spot in the first 3
+	 * elements of the specified double array.
+	 */
+	private static final void localize( final Spot spot, final double[] coords )
+	{
+		coords[ 0 ] = spot.getFeature( Spot.POSITION_X ).doubleValue();
+		coords[ 1 ] = spot.getFeature( Spot.POSITION_Y ).doubleValue();
+		coords[ 2 ] = spot.getFeature( Spot.POSITION_Z ).doubleValue();
 	}
 
 	public void setSelection( final Collection< DefaultWeightedEdge > edgeSelection )
